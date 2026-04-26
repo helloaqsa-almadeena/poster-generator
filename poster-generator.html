@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AQSA Poster Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8001C;
+    --red-dark: #B8001A;
+    --ink: #0D0D0D;
+    --surface: #F5F4F1;
+    --card: #FFFFFF;
+    --muted: #888;
+    --border: #E0DDD8;
+    --success: #00A550;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--surface);
+    min-height: 100vh;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    padding: 18px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    background: var(--red);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: white;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .header-text h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: white;
+    line-height: 1;
+    letter-spacing: 0.3px;
+  }
+
+  .header-text p {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  /* ── Main ── */
+  main {
+    padding: 20px 16px 40px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── Section Label ── */
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 22px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  /* ── Form Fields ── */
+  .field-group {
+    padding: 16px;
+  }
+
+  .field-group + .field-group {
+    border-top: 1px solid var(--border);
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .field-sublabel {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(232,0,28,0.1);
+    background: white;
+  }
+
+  /* Price row */
+  .price-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .currency-badge {
+    background: var(--ink);
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .price-row input {
+    flex: 1;
+  }
+
+  /* ── Poster Type Pills ── */
+  .poster-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .poster-pill {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.18s;
+    text-align: left;
+    width: 100%;
+  }
+
+  .poster-pill.selected {
+    border-color: var(--red);
+    background: #FFF5F6;
+  }
+
+  .pill-icon {
+    width: 44px;
+    height: 56px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: white;
+  }
+
+  .pill-icon.a4-portrait {
+    background: var(--ink);
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1;
+  }
+
+  .pill-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .pill-text span {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .pill-check {
+    margin-left: auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: white;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+  }
+
+  .poster-pill.selected .pill-check {
+    background: var(--red);
+    border-color: var(--red);
+  }
+
+  .pill-check-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  /* ── Currency Toggle ── */
+  .currency-toggle {
+    display: flex;
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .currency-option {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .currency-option.active {
+    background: var(--ink);
+    color: white;
+  }
+
+  /* ── Preview Strip ── */
+  .preview-strip {
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .preview-strip::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(232,0,28,0.15);
+  }
+
+  .preview-poster {
+    width: 72px;
+    height: 100px;
+    background: white;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .preview-product-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 8px;
+    color: #222;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 4px;
+    line-height: 1.2;
+    word-break: break-word;
+    max-height: 24px;
+    overflow: hidden;
+  }
+
+  .preview-price-block {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2px;
+  }
+
+  .preview-currency {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 9px;
+    color: var(--red);
+    line-height: 1;
+    margin-top: 3px;
+  }
+
+  .preview-integer {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--ink);
+    line-height: 1;
+    margin: 0 1px;
+  }
+
+  .preview-decimal {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+
+  .preview-divider {
+    height: 40px;
+    width: 1px;
+    background: rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+
+  .preview-info {
+    flex: 1;
+  }
+
+  .preview-info .preview-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .preview-info .preview-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: white;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+  }
+
+  .preview-info .preview-size-tag {
+    display: inline-block;
+    margin-top: 6px;
+    background: rgba(232,0,28,0.25);
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Create Button ── */
+  .btn-create {
+    width: 100%;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 22px;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-create:active {
+    transform: scale(0.98);
+    background: var(--red-dark);
+  }
+
+  .btn-create:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-create .btn-icon {
+    font-size: 22px;
+  }
+
+  /* ── Download Panel ── */
+  .download-panel {
+    display: none;
+    margin-top: 22px;
+  }
+
+  .download-panel.visible {
+    display: block;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .download-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .success-badge {
+    width: 28px;
+    height: 28px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .download-header span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  .download-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-download {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-family: 'Barlow', sans-serif;
+    transition: all 0.18s;
+  }
+
+  .btn-download:active { transform: scale(0.98); }
+
+  .btn-download.pdf {
+    background: var(--ink);
+    color: white;
+  }
+
+  .btn-download.docx {
+    background: #1F4E8C;
+    color: white;
+  }
+
+  .btn-download .dl-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .btn-download .dl-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+
+  .btn-download .dl-text span {
+    font-size: 12px;
+    opacity: 0.65;
+    margin-top: 1px;
+    display: block;
+  }
+
+  .btn-download .dl-arrow {
+    margin-left: auto;
+    font-size: 18px;
+    opacity: 0.6;
+  }
+
+  /* ── Print Tip ── */
+  .print-tip {
+    background: #FFF8E1;
+    border: 1px solid #FFE082;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+
+  .print-tip .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .print-tip p {
+    font-size: 12px;
+    color: #795548;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* ── Make Another ── */
+  .btn-reset {
+    width: 100%;
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.18s;
+  }
+
+  .btn-reset:active { opacity: 0.7; }
+
+  /* ── Spinner ── */
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Error toast ── */
+  .error-msg {
+    background: #FFF0F0;
+    border: 1px solid #FFCDD2;
+    color: #C62828;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    display: none;
+    margin-top: 10px;
+  }
+
+  .error-msg.visible { display: block; animation: slideUp 0.2s ease; }
+
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo-mark">AQ</div>
+  <div class="header-text">
+    <h1>AQSA Poster Generator</h1>
+    <p>Create & print price posters instantly</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- Product Name -->
+  <div class="section-label">Product Details</div>
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label" for="productName">Product Name</label>
+      <input type="text" id="productName" placeholder="e.g. FRESH MILK 1L" maxlength="60"
+             oninput="updatePreview()" autocomplete="off" autocapitalize="characters">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="price">
+        Price
+        <span class="field-sublabel" id="currencyLabel">د.إ</span>
+      </label>
+      <div class="price-row">
+        <div class="currency-badge" id="currencyBadge">د.إ</div>
+        <input type="number" id="price" placeholder="0.00" min="0" step="0.01"
+               inputmode="decimal" oninput="updatePreview()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Currency -->
+  <div class="section-label">Currency</div>
+  <div class="card">
+    <div class="field-group">
+      <div class="currency-toggle">
+        <button class="currency-option active" onclick="setCurrency('د.إ', this)">د.إ &nbsp;Dirham</button>
+        <button class="currency-option" onclick="setCurrency('AED', this)">AED</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Poster Type -->
+  <div class="section-label">Poster Type</div>
+  <div class="card">
+    <div class="field-group">
+      <div class="poster-pills">
+        <button class="poster-pill selected" onclick="selectPoster('a4-portrait-single', this)">
+          <div class="pill-icon a4-portrait">
+            <span>A4</span>
+          </div>
+          <div class="pill-text">
+            <strong>A4 Portrait – Single Item</strong>
+            <span>Large price tag · One product per page</span>
+          </div>
+          <div class="pill-check"><div class="pill-check-dot"></div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Preview -->
+  <div class="preview-strip" id="previewStrip">
+    <div class="preview-poster">
+      <div class="preview-price-block">
+        <div class="preview-currency" id="prevCurrency">د.إ</div>
+        <div class="preview-integer" id="prevInteger">0</div>
+        <div class="preview-decimal" id="prevDecimal">.00</div>
+      </div>
+      <div class="preview-product-name" id="prevName">PRODUCT NAME</div>
+    </div>
+    <div class="preview-divider"></div>
+    <div class="preview-info">
+      <div class="preview-label">Preview</div>
+      <div class="preview-name" id="prevNameLarge">—</div>
+      <div class="preview-size-tag">A4 Portrait</div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" id="errorMsg">⚠️ Please fill in the product name and price.</div>
+
+  <!-- Create Button -->
+  <button class="btn-create" id="createBtn" onclick="createPoster()">
+    <span class="btn-icon">🖨</span>
+    CREATE POSTER
+  </button>
+
+  <!-- Download Panel -->
+  <div class="download-panel" id="downloadPanel">
+    <div class="download-header">
+      <div class="success-badge">✓</div>
+      <span>Poster ready — choose format</span>
+    </div>
+
+    <div class="download-buttons">
+      <button class="btn-download pdf" id="btnPDF" onclick="downloadPDF()">
+        <div class="dl-icon">📄</div>
+        <div class="dl-text">
+          <strong>Download PDF</strong>
+          <span>Best for printing · Canon app ready</span>
+        </div>
+        <div class="dl-arrow">↓</div>
+      </button>
+
+      <button class="btn-download docx" id="btnDOCX" onclick="downloadDOCX()">
+        <div class="dl-icon">📝</div>
+        <div class="dl-text">
+          <strong>Download Word (.docx)</strong>
+          <span>Editable · Microsoft Word format</span>
+        </div>
+        <div class="dl-arrow">↓</div>
+      </button>
+    </div>
+
+    <div class="print-tip">
+      <span class="tip-icon">💡</span>
+      <p>Open the downloaded file in the <strong>Canon PRINT Inkjet/SELPHY</strong> app to print directly from your phone.</p>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">+ Make Another Poster</button>
+  </div>
+
+</main>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- docx via CDN -->
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+
+<script>
+  // ── State ──
+  let state = {
+    currency: 'د.إ',
+    posterType: 'a4-portrait-single',
+    pdfBlob: null,
+    docxBlob: null,
+  };
+
+  // ── Currency ──
+  function setCurrency(val, btn) {
+    state.currency = val;
+    document.getElementById('currencyBadge').textContent = val;
+    document.getElementById('currencyLabel').textContent = val;
+    document.getElementById('prevCurrency').textContent = val;
+    document.querySelectorAll('.currency-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // ── Poster Type ──
+  function selectPoster(type, btn) {
+    state.posterType = type;
+    document.querySelectorAll('.poster-pill').forEach(p => p.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  // ── Live Preview ──
+  function updatePreview() {
+    const name = document.getElementById('productName').value || 'PRODUCT NAME';
+    const rawPrice = parseFloat(document.getElementById('price').value) || 0;
+    const integer = Math.floor(rawPrice);
+    const decimal = '.' + (rawPrice.toFixed(2).split('.')[1] || '00');
+
+    document.getElementById('prevInteger').textContent = integer;
+    document.getElementById('prevDecimal').textContent = decimal;
+    document.getElementById('prevName').textContent = name.toUpperCase();
+    document.getElementById('prevNameLarge').textContent = name.toUpperCase() || '—';
+  }
+
+  // ── Validate ──
+  function validate() {
+    const name = document.getElementById('productName').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (!name || isNaN(price) || price < 0) {
+      errorMsg.classList.add('visible');
+      setTimeout(() => errorMsg.classList.remove('visible'), 3000);
+      return false;
+    }
+    errorMsg.classList.remove('visible');
+    return true;
+  }
+
+  // ── Create Poster ──
+  async function createPoster() {
+    if (!validate()) return;
+
+    const btn = document.getElementById('createBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> GENERATING...';
+
+    await new Promise(r => setTimeout(r, 400));
+
+    const name = document.getElementById('productName').value.trim().toUpperCase();
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const currency = state.currency;
+
+    // Generate both
+    state.pdfBlob = generatePDF(name, price, currency);
+    state.docxBlob = await generateDOCX(name, price, currency);
+
+    btn.innerHTML = '<span class="btn-icon">✓</span> POSTER CREATED!';
+    btn.style.background = 'var(--success)';
+
+    document.getElementById('downloadPanel').classList.add('visible');
+
+    setTimeout(() => {
+      btn.innerHTML = '<span class="btn-icon">🖨</span> CREATE POSTER';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 2000);
+  }
+
+  // ── PDF Generator ──
+  function generatePDF(name, price, currency) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210;
+    const H = 297;
+
+    // White background
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, W, H, 'F');
+
+    // Top red bar
+    doc.setFillColor(232, 0, 28);
+    doc.rect(0, 0, W, 12, 'F');
+
+    // Bottom black bar
+    doc.setFillColor(13, 13, 13);
+    doc.rect(0, H - 16, W, 16, 'F');
+
+    // Store name in top bar
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('AQSA SUPERMARKET', W / 2, 8.5, { align: 'center' });
+
+    // ── Price Section ──
+    const integer = Math.floor(price);
+    const decimal = price.toFixed(2).split('.')[1];
+
+    const priceY = 130;
+
+    // Currency symbol
+    doc.setTextColor(232, 0, 28);
+    doc.setFontSize(36);
+    doc.setFont('helvetica', 'bold');
+    const currW = doc.getTextWidth(currency);
+    doc.text(currency, W / 2 - 48, priceY);
+
+    // Main integer
+    doc.setTextColor(13, 13, 13);
+    doc.setFontSize(120);
+    doc.setFont('helvetica', 'bold');
+    doc.text(String(integer), W / 2, priceY + 2, { align: 'center' });
+
+    // Decimal
+    doc.setFontSize(36);
+    doc.setTextColor(13, 13, 13);
+    doc.text('.' + decimal, W / 2 + 52, priceY - 30);
+
+    // Divider line
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.5);
+    doc.line(20, priceY + 20, W - 20, priceY + 20);
+
+    // Product Name
+    doc.setTextColor(13, 13, 13);
+    doc.setFont('helvetica', 'bold');
+
+    // Auto-size name
+    let nameSize = 48;
+    doc.setFontSize(nameSize);
+    while (doc.getTextWidth(name) > W - 30 && nameSize > 18) {
+      nameSize -= 2;
+      doc.setFontSize(nameSize);
+    }
+    doc.text(name, W / 2, priceY + 50, { align: 'center' });
+
+    // Footer text
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Price valid while stocks last', W / 2, H - 6, { align: 'center' });
+
+    return doc.output('blob');
+  }
+
+  // ── DOCX Generator ──
+  async function generateDOCX(name, price, currency) {
+    const { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } = docx;
+
+    const integer = Math.floor(price);
+    const decimal = price.toFixed(2).split('.')[1];
+    const priceDisplay = `${currency} ${integer}.${decimal}`;
+
+    const doc = new Document({
+      sections: [{
+        properties: {
+          page: {
+            size: { width: 11906, height: 16838 },
+            margin: { top: 720, right: 720, bottom: 720, left: 720 }
+          }
+        },
+        children: [
+          // Store header
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 0, after: 200 },
+            shading: { fill: 'E8001C' },
+            children: [
+              new TextRun({
+                text: 'AQSA SUPERMARKET',
+                bold: true,
+                color: 'FFFFFF',
+                size: 28,
+                font: 'Arial'
+              })
+            ]
+          }),
+
+          // Spacer
+          new Paragraph({ spacing: { before: 400, after: 0 }, children: [] }),
+
+          // Currency + Price Big
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 200, after: 100 },
+            children: [
+              new TextRun({
+                text: currency + ' ',
+                bold: true,
+                color: 'E8001C',
+                size: 72,
+                font: 'Arial'
+              }),
+              new TextRun({
+                text: String(integer),
+                bold: true,
+                color: '0D0D0D',
+                size: 200,
+                font: 'Arial'
+              }),
+              new TextRun({
+                text: '.' + decimal,
+                bold: true,
+                color: '0D0D0D',
+                size: 72,
+                font: 'Arial'
+              }),
+            ]
+          }),
+
+          // Divider paragraph
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 200, after: 200 },
+            border: {
+              bottom: { style: BorderStyle.SINGLE, size: 6, color: 'E0DDD8', space: 1 }
+            },
+            children: []
+          }),
+
+          // Product Name
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 300, after: 200 },
+            children: [
+              new TextRun({
+                text: name,
+                bold: true,
+                color: '0D0D0D',
+                size: 96,
+                font: 'Arial'
+              })
+            ]
+          }),
+
+          // Spacer
+          new Paragraph({ spacing: { before: 1000, after: 0 }, children: [] }),
+
+          // Footer note
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 200, after: 0 },
+            children: [
+              new TextRun({
+                text: 'Price valid while stocks last',
+                color: '888888',
+                size: 18,
+                font: 'Arial'
+              })
+            ]
+          }),
+        ]
+      }]
+    });
+
+    const buffer = await Packer.toBlob(doc);
+    return buffer;
+  }
+
+  // ── Download PDF ──
+  function downloadPDF() {
+    if (!state.pdfBlob) return;
+    const name = document.getElementById('productName').value.trim().replace(/\s+/g, '_');
+    const url = URL.createObjectURL(state.pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `poster_${name}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Download DOCX ──
+  function downloadDOCX() {
+    if (!state.docxBlob) return;
+    const name = document.getElementById('productName').value.trim().replace(/\s+/g, '_');
+    const url = URL.createObjectURL(state.docxBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `poster_${name}.docx`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Reset ──
+  function resetForm() {
+    document.getElementById('productName').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('downloadPanel').classList.remove('visible');
+    document.getElementById('createBtn').disabled = false;
+    state.pdfBlob = null;
+    state.docxBlob = null;
+    updatePreview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
