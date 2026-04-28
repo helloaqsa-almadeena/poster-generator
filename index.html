@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AQSA Poster Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Anton = supermarket Impact-style bold font, Oswald = condensed bold for product name -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&display=swap" rel="stylesheet">
 <style>
   :root {
     --red: #E8001C;
@@ -47,19 +49,18 @@
   .pill-check { margin-left: auto; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); background: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.18s; }
   .poster-pill.selected .pill-check { background: var(--red); border-color: var(--red); }
   .pill-check-dot { width: 8px; height: 8px; border-radius: 50%; background: white; }
-  .preview-strip { background: var(--ink); border-radius: 14px; padding: 20px; margin-top: 22px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
+
+  /* Preview */
+  .preview-strip { background: var(--ink); border-radius: 14px; padding: 16px 20px; margin-top: 22px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
   .preview-strip::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(232,0,28,0.15); }
-  .preview-poster { width: 72px; height: 100px; background: white; border-radius: 6px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; overflow: hidden; }
-  .preview-price-block { display: flex; align-items: flex-start; margin-bottom: 2px; }
-  .preview-currency { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 9px; color: var(--red); margin-top: 3px; }
-  .preview-integer { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 28px; color: var(--ink); line-height: 1; margin: 0 1px; }
-  .preview-decimal { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; color: var(--ink); margin-top: 4px; }
-  .preview-product-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 8px; color: #222; text-align: center; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 4px; line-height: 1.2; word-break: break-word; }
+  .preview-canvas-wrap { width: 72px; height: 100px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: white; }
+  #previewCanvas { width: 72px; height: 100px; display: block; }
   .preview-divider { height: 40px; width: 1px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
-  .preview-info { flex: 1; }
+  .preview-info { flex: 1; min-width: 0; }
   .preview-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px; }
-  .preview-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 20px; color: white; line-height: 1.1; }
+  .preview-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 18px; color: white; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .preview-size-tag { display: inline-block; margin-top: 6px; background: rgba(232,0,28,0.25); color: var(--red); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+
   .error-msg { background: #FFF0F0; border: 1px solid #FFCDD2; color: #C62828; border-radius: 10px; padding: 12px 14px; font-size: 13px; font-weight: 600; display: none; margin-top: 12px; }
   .error-msg.visible { display: block; animation: slideUp 0.2s ease; }
   .btn-create { width: 100%; background: var(--red); color: white; border: none; border-radius: 14px; padding: 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: 0.8px; text-transform: uppercase; cursor: pointer; margin-top: 22px; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 10px; }
@@ -83,7 +84,7 @@
   .print-tip { background: #FFF8E1; border: 1px solid #FFE082; border-radius: 10px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start; margin-top: 10px; }
   .print-tip .tip-icon { font-size: 18px; flex-shrink: 0; }
   .print-tip p { font-size: 12px; color: #795548; font-weight: 500; line-height: 1.5; }
-  .btn-reset { width: 100%; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: all 0.18s; }
+  .btn-reset { width: 100%; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
   .spinner { width: 20px; height: 20px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
@@ -103,13 +104,15 @@
   <div class="card">
     <div class="field-group">
       <label class="field-label" for="productName">Product Name</label>
-      <input type="text" id="productName" placeholder="e.g. FRESH MILK 1L" maxlength="60" oninput="updatePreview()" autocomplete="off" autocapitalize="characters">
+      <input type="text" id="productName" placeholder="e.g. FRESH MILK 1L" maxlength="80"
+             oninput="updatePreview()" autocomplete="off" autocapitalize="characters">
     </div>
     <div class="field-group">
-      <label class="field-label" for="price">Price <span class="field-sublabel" id="currencyLabel">د.إ</span></label>
+      <label class="field-label" for="price">Price <span class="field-sublabel" id="currencyLabel">AED</span></label>
       <div class="price-row">
-        <div class="currency-badge" id="currencyBadge">د.إ</div>
-        <input type="number" id="price" placeholder="0.00" min="0" step="0.01" inputmode="decimal" oninput="updatePreview()">
+        <div class="currency-badge" id="currencyBadge">AED</div>
+        <input type="number" id="price" placeholder="0.00" min="0" step="0.01"
+               inputmode="decimal" oninput="updatePreview()">
       </div>
     </div>
   </div>
@@ -118,8 +121,8 @@
   <div class="card">
     <div class="field-group">
       <div class="currency-toggle">
-        <button class="currency-option active" onclick="setCurrency('د.إ', this)">د.إ &nbsp;Dirham</button>
-        <button class="currency-option" onclick="setCurrency('AED', this)">AED</button>
+        <button class="currency-option active" onclick="setCurrency('AED', this)">AED</button>
+        <button class="currency-option" onclick="setCurrency('د.إ', this)">د.إ Arabic</button>
       </div>
     </div>
   </div>
@@ -140,14 +143,10 @@
     </div>
   </div>
 
+  <!-- Live preview rendered on canvas (same draw function as PDF) -->
   <div class="preview-strip">
-    <div class="preview-poster">
-      <div class="preview-price-block">
-        <div class="preview-currency" id="prevCurrency">د.إ</div>
-        <div class="preview-integer" id="prevInteger">0</div>
-        <div class="preview-decimal" id="prevDecimal">.00</div>
-      </div>
-      <div class="preview-product-name" id="prevName">PRODUCT NAME</div>
+    <div class="preview-canvas-wrap">
+      <canvas id="previewCanvas" width="216" height="300"></canvas>
     </div>
     <div class="preview-divider"></div>
     <div class="preview-info">
@@ -157,7 +156,7 @@
     </div>
   </div>
 
-  <div class="error-msg" id="errorMsg">⚠️ Please fill in the product name and price.</div>
+  <div class="error-msg" id="errorMsg"></div>
 
   <button class="btn-create" id="createBtn" onclick="createPoster()">
     🖨&nbsp; CREATE POSTER
@@ -194,21 +193,27 @@
   </div>
 </main>
 
-<!-- jsPDF from cdnjs (very reliable) -->
+<!-- jsPDF — PDF from Canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- JSZip from cdnjs (used to build DOCX without any external docx library) -->
+<!-- JSZip for DOCX -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
-var state = { currency: 'د.إ', pdfBlob: null, docxBlob: null };
+var state = { currency: 'AED', pdfBlob: null, docxBlob: null, fontsReady: false };
+
+// ── Wait for Anton + Oswald to load before first draw ──
+document.fonts.ready.then(function() {
+  state.fontsReady = true;
+  updatePreview();
+});
 
 function setCurrency(val, btn) {
   state.currency = val;
   document.getElementById('currencyBadge').textContent = val;
   document.getElementById('currencyLabel').textContent = val;
-  document.getElementById('prevCurrency').textContent = val;
   document.querySelectorAll('.currency-option').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
+  updatePreview();
 }
 
 function selectPoster(type, btn) {
@@ -216,137 +221,165 @@ function selectPoster(type, btn) {
   btn.classList.add('selected');
 }
 
-function updatePreview() {
-  var name = document.getElementById('productName').value || 'PRODUCT NAME';
-  var raw = parseFloat(document.getElementById('price').value) || 0;
-  var integer = Math.floor(raw);
-  var decimal = '.' + raw.toFixed(2).split('.')[1];
-  document.getElementById('prevInteger').textContent = integer;
-  document.getElementById('prevDecimal').textContent = decimal;
-  document.getElementById('prevName').textContent = name.toUpperCase();
-  document.getElementById('prevNameLarge').textContent = name.toUpperCase() || '—';
-}
-
 function showError(msg) {
   var el = document.getElementById('errorMsg');
-  el.textContent = msg || '⚠️ Please fill in the product name and price.';
+  el.textContent = msg;
   el.classList.add('visible');
   setTimeout(function(){ el.classList.remove('visible'); }, 3500);
 }
 
 function validate() {
-  var name = document.getElementById('productName').value.trim();
+  var name  = document.getElementById('productName').value.trim();
   var price = parseFloat(document.getElementById('price').value);
-  if (!name) { showError('⚠️ Please enter a product name.'); return false; }
+  if (!name)                     { showError('⚠️ Please enter a product name.');  return false; }
   if (isNaN(price) || price < 0) { showError('⚠️ Please enter a valid price.'); return false; }
   return true;
 }
 
-function createPoster() {
-  if (!validate()) return;
-  var btn = document.getElementById('createBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>&nbsp; GENERATING...';
+// ══════════════════════════════════════════════════════
+//  CORE DRAW FUNCTION — draws poster onto any canvas ctx
+//  W, H = canvas pixel dimensions
+//  scale = 1 for preview, higher for PDF export canvas
+// ══════════════════════════════════════════════════════
+function drawPoster(ctx, W, H, name, integer, decStr, currency) {
+  var RED    = '#E8001C';
+  var SHADOW = 'rgba(0,0,0,0.18)';
+  var BLACK  = '#000000';
+  var WHITE  = '#FFFFFF';
 
-  setTimeout(function() {
-    try {
-      var name = document.getElementById('productName').value.trim().toUpperCase();
-      var price = parseFloat(document.getElementById('price').value) || 0;
-      var currency = state.currency;
+  // ── Background ──
+  ctx.fillStyle = WHITE;
+  ctx.fillRect(0, 0, W, H);
 
-      state.pdfBlob = makePDF(name, price, currency);
-      state.docxBlob = makeDOCX(name, price, currency);  // returns a Promise
+  // ── Font families (Anton = Impact-style, Oswald = condensed bold for name) ──
+  var INT_FONT  = 'Anton, Impact, Arial Black, sans-serif';
+  var NAME_FONT = 'Oswald, "Arial Narrow", Arial, sans-serif';
+  var CUR_FONT  = 'Anton, Impact, Arial Black, sans-serif';
 
-      btn.innerHTML = '✓&nbsp; POSTER CREATED!';
-      btn.style.background = 'var(--success)';
+  // ── Font sizes (proportional to height) ──
+  var intSize = Math.round(H * 0.40);   // integer takes ~40% of page height
+  var decSize = Math.round(H * 0.115);  // decimal ~11.5%
+  var curSize = Math.round(H * 0.065);  // currency ~6.5%
 
-      var panel = document.getElementById('downloadPanel');
-      panel.classList.add('visible');
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // ── Vertical: integer baseline at 58% down from top ──
+  var intBaseY = H * 0.58;
 
-      setTimeout(function() {
-        btn.innerHTML = '🖨&nbsp; CREATE POSTER';
-        btn.style.background = '';
-        btn.disabled = false;
-      }, 2500);
+  // ── Measure integer width ──
+  ctx.font = '900 ' + intSize + 'px ' + INT_FONT;
+  var intW   = ctx.measureText(integer).width;
+  var intX   = (W - intW) / 2;   // centered
 
-    } catch(e) {
-      showError('❌ Error: ' + e.message);
-      btn.innerHTML = '🖨&nbsp; CREATE POSTER';
-      btn.style.background = '';
-      btn.disabled = false;
-    }
-  }, 350);
+  // ── Drop shadow for integer ──
+  var sh = W * 0.012;
+  ctx.save();
+  ctx.shadowColor   = 'rgba(0,0,0,0.30)';
+  ctx.shadowOffsetX = sh;
+  ctx.shadowOffsetY = sh;
+  ctx.shadowBlur    = sh * 2;
+  ctx.fillStyle = RED;
+  ctx.font = '900 ' + intSize + 'px ' + INT_FONT;
+  ctx.fillText(integer, intX, intBaseY);
+  ctx.restore();
+
+  // ── Decimal: raised — baseline at top of integer (intBaseY - intSize * 0.72) ──
+  var decBaseY = intBaseY - intSize * 0.60;
+  var dotDecStr = '.' + decStr;
+  ctx.font = '900 ' + decSize + 'px ' + INT_FONT;
+  var decX = intX + intW + W * 0.008;
+
+  ctx.save();
+  ctx.shadowColor   = 'rgba(0,0,0,0.25)';
+  ctx.shadowOffsetX = sh * 0.6;
+  ctx.shadowOffsetY = sh * 0.6;
+  ctx.shadowBlur    = sh;
+  ctx.fillStyle = RED;
+  ctx.fillText(dotDecStr, decX, decBaseY);
+  ctx.restore();
+
+  // ── Currency: bottom-left of integer, small ──
+  ctx.font = '900 ' + curSize + 'px ' + CUR_FONT;
+  var curW = ctx.measureText(currency).width;
+  var curX = intX - curW - W * 0.015;
+  var curY = intBaseY;  // same baseline as integer
+  ctx.fillStyle = RED;
+  ctx.fillText(currency, curX, curY);
+
+  // ── Product name — Oswald Bold, black, centered, bottom 20% ──
+  var maxNameSize = Math.round(H * 0.085);
+  var maxW = W * 0.92;
+
+  // Word-wrap
+  var words = name.split(' ');
+  var lines = [];
+  var cur = '';
+  ctx.font = '700 ' + maxNameSize + 'px ' + NAME_FONT;
+  for (var i = 0; i < words.length; i++) {
+    var test = cur ? cur + ' ' + words[i] : words[i];
+    if (ctx.measureText(test).width <= maxW) { cur = test; }
+    else { if (cur) lines.push(cur); cur = words[i]; }
+  }
+  if (cur) lines.push(cur);
+
+  // Shrink font until all lines fit
+  var nameSize = maxNameSize;
+  var fits = false;
+  while (!fits && nameSize > 14) {
+    ctx.font = '700 ' + nameSize + 'px ' + NAME_FONT;
+    fits = lines.every(function(l){ return ctx.measureText(l).width <= maxW; });
+    if (!fits) nameSize -= 2;
+  }
+
+  var lineH = nameSize * 1.18;
+  var totalNameH = lines.length * lineH;
+  // Bottom anchor: last line baseline ~6% from bottom
+  var lastLineY = H * 0.94;
+  var firstLineY = lastLineY - (lines.length - 1) * lineH;
+
+  ctx.fillStyle = BLACK;
+  ctx.font = '700 ' + nameSize + 'px ' + NAME_FONT;
+  for (var k = 0; k < lines.length; k++) {
+    var lw = ctx.measureText(lines[k]).width;
+    ctx.fillText(lines[k], (W - lw) / 2, firstLineY + k * lineH);
+  }
 }
 
-// ── PDF ──
+// ── Update live preview canvas ──
+function updatePreview() {
+  var name     = (document.getElementById('productName').value || 'PRODUCT NAME').toUpperCase();
+  var raw      = parseFloat(document.getElementById('price').value) || 0;
+  var integer  = String(Math.floor(raw));
+  var decStr   = raw.toFixed(2).split('.')[1];
+  var currency = state.currency;
+
+  document.getElementById('prevNameLarge').textContent = name;
+
+  var canvas = document.getElementById('previewCanvas');
+  var ctx    = canvas.getContext('2d');
+  drawPoster(ctx, canvas.width, canvas.height, name, integer, decStr, currency);
+}
+
+// ── Generate PDF by drawing to a high-res canvas then exporting ──
 function makePDF(name, price, currency) {
+  var integer = String(Math.floor(price));
+  var decStr  = price.toFixed(2).split('.')[1];
+
+  // A4 at 150dpi: 1240 x 1754 px
+  var PW = 1240, PH = 1754;
+  var offscreen = document.createElement('canvas');
+  offscreen.width  = PW;
+  offscreen.height = PH;
+  var ctx = offscreen.getContext('2d');
+  drawPoster(ctx, PW, PH, name, integer, decStr, currency);
+
+  // Export canvas to PDF using jsPDF
   var jsPDF = window.jspdf.jsPDF;
-  var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  var W = 210, H = 297;
-
-  doc.setFillColor(255, 255, 255);
-  doc.rect(0, 0, W, H, 'F');
-
-  // Red top bar
-  doc.setFillColor(232, 0, 28);
-  doc.rect(0, 0, W, 14, 'F');
-
-  // Black bottom bar
-  doc.setFillColor(13, 13, 13);
-  doc.rect(0, H - 18, W, 18, 'F');
-
-  // Store name
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'bold');
-  doc.text('AQSA SUPERMARKET', W / 2, 9.5, { align: 'center' });
-
-  var integer = Math.floor(price);
-  var decimal = price.toFixed(2).split('.')[1];
-  var priceY = 148;
-
-  // Currency
-  doc.setTextColor(232, 0, 28);
-  doc.setFontSize(32);
-  doc.setFont('helvetica', 'bold');
-  doc.text(currency, W / 2 - 54, priceY);
-
-  // Integer
-  doc.setTextColor(13, 13, 13);
-  doc.setFontSize(110);
-  doc.text(String(integer), W / 2, priceY + 2, { align: 'center' });
-
-  // Decimal superscript
-  doc.setFontSize(32);
-  doc.text('.' + decimal, W / 2 + 50, priceY - 28);
-
-  // Divider
-  doc.setDrawColor(210, 210, 210);
-  doc.setLineWidth(0.4);
-  doc.line(20, priceY + 22, W - 20, priceY + 22);
-
-  // Product name — auto size
-  doc.setTextColor(13, 13, 13);
-  doc.setFont('helvetica', 'bold');
-  var sz = 46;
-  doc.setFontSize(sz);
-  while (doc.getTextWidth(name) > W - 28 && sz > 16) {
-    sz -= 2;
-    doc.setFontSize(sz);
-  }
-  doc.text(name, W / 2, priceY + 54, { align: 'center' });
-
-  // Footer
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Price valid while stocks last', W / 2, H - 6, { align: 'center' });
-
+  var doc   = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  var imgData = offscreen.toDataURL('image/jpeg', 0.97);
+  doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
   return doc.output('blob');
 }
 
-// ── DOCX (built with JSZip, no external docx library needed) ──
+// ── DOCX: raw XML via JSZip ──
 function makeDOCX(name, price, currency) {
   var integer = Math.floor(price);
   var decimal = price.toFixed(2).split('.')[1];
@@ -355,52 +388,67 @@ function makeDOCX(name, price, currency) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  var docXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-'<w:document xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' +
+  // Note: in DOCX the currency symbol renders correctly even if Arabic
+  // sz = half-points. 480 = 240pt (giant), 160 = 80pt, 80 = 40pt
+  var docXml =
+'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+'<w:body>' +
 
-// Header bar
-'<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="240"/><w:shd w:val="clear" w:color="auto" w:fill="E8001C"/></w:pPr>' +
-'<w:r><w:rPr><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>AQSA SUPERMARKET</w:t></w:r></w:p>' +
+// Top spacer
+'<w:p><w:pPr><w:spacing w:before="0" w:after="3400"/></w:pPr></w:p>' +
 
-// Spacer
-'<w:p><w:pPr><w:spacing w:before="480" w:after="0"/></w:pPr></w:p>' +
-
-// Price
-'<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="120"/></w:pPr>' +
-'<w:r><w:rPr><w:b/><w:color w:val="E8001C"/><w:sz w:val="72"/><w:szCs w:val="72"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:vertAlign w:val="superscript"/></w:rPr><w:t xml:space="preserve">' + esc(currency) + ' </w:t></w:r>' +
-'<w:r><w:rPr><w:b/><w:color w:val="0D0D0D"/><w:sz w:val="240"/><w:szCs w:val="240"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>' + esc(String(integer)) + '</w:t></w:r>' +
-'<w:r><w:rPr><w:b/><w:color w:val="0D0D0D"/><w:sz w:val="72"/><w:szCs w:val="72"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:vertAlign w:val="superscript"/></w:rPr><w:t>.' + esc(decimal) + '</w:t></w:r>' +
+// Price row: [currency small] [integer giant] [.decimal raised]
+'<w:p>' +
+  '<w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr>' +
+  // Currency
+  '<w:r><w:rPr><w:b/><w:color w:val="E8001C"/><w:sz w:val="80"/><w:szCs w:val="80"/>' +
+  '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/></w:rPr>' +
+  '<w:t xml:space="preserve">' + esc(currency) + ' </w:t></w:r>' +
+  // Integer
+  '<w:r><w:rPr><w:b/><w:color w:val="E8001C"/><w:sz w:val="480"/><w:szCs w:val="480"/>' +
+  '<w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr>' +
+  '<w:t>' + esc(String(integer)) + '</w:t></w:r>' +
+  // .decimal raised
+  '<w:r><w:rPr><w:b/><w:color w:val="E8001C"/><w:sz w:val="160"/><w:szCs w:val="160"/>' +
+  '<w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:vertAlign w:val="superscript"/></w:rPr>' +
+  '<w:t>.' + esc(decimal) + '</w:t></w:r>' +
 '</w:p>' +
 
-// Divider
-'<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="160" w:after="160"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="CCCCCC"/></w:pBdr></w:pPr></w:p>' +
+// Spacer
+'<w:p><w:pPr><w:spacing w:before="700" w:after="0"/></w:pPr></w:p>' +
 
 // Product name
-'<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="300" w:after="200"/></w:pPr>' +
-'<w:r><w:rPr><w:b/><w:color w:val="0D0D0D"/><w:sz w:val="96"/><w:szCs w:val="96"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>' + esc(name) + '</w:t></w:r></w:p>' +
+'<w:p>' +
+  '<w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr>' +
+  '<w:r><w:rPr><w:b/><w:color w:val="000000"/><w:sz w:val="110"/><w:szCs w:val="110"/>' +
+  '<w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr>' +
+  '<w:t>' + esc(name) + '</w:t></w:r>' +
+'</w:p>' +
 
-// Spacer
-'<w:p><w:pPr><w:spacing w:before="1440" w:after="0"/></w:pPr></w:p>' +
-
-// Footer
-'<w:p><w:pPr><w:jc w:val="center"/></w:pPr>' +
-'<w:r><w:rPr><w:color w:val="888888"/><w:sz w:val="18"/><w:szCs w:val="18"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr><w:t>Price valid while stocks last</w:t></w:r></w:p>' +
-
-// Page size A4
-'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720"/></w:sectPr>' +
+// A4 page
+'<w:sectPr>' +
+  '<w:pgSz w:w="11906" w:h="16838"/>' +
+  '<w:pgMar w:top="720" w:right="600" w:bottom="720" w:left="600"/>' +
+'</w:sectPr>' +
 '</w:body></w:document>';
 
-  var relsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+  var relsXml =
+'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
 '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
 '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' +
 '</Relationships>';
 
-  var stylesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+  var stylesXml =
+'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
 '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
-'<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="24"/></w:rPr></w:rPrDefault></w:docDefaults>' +
+'<w:docDefaults><w:rPrDefault><w:rPr>' +
+'<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/>' +
+'</w:rPr></w:rPrDefault></w:docDefaults>' +
 '</w:styles>';
 
-  var contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+  var contentTypes =
+'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
 '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
 '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
 '<Default Extension="xml" ContentType="application/xml"/>' +
@@ -408,7 +456,8 @@ function makeDOCX(name, price, currency) {
 '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' +
 '</Types>';
 
-  var packageRels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+  var packageRels =
+'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
 '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
 '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
 '</Relationships>';
@@ -419,35 +468,64 @@ function makeDOCX(name, price, currency) {
   zip.file('word/document.xml', docXml);
   zip.file('word/_rels/document.xml.rels', relsXml);
   zip.file('word/styles.xml', stylesXml);
+  return zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+}
 
-  return zip.generateAsync({
-    type: 'blob',
-    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  });
+// ── Create ──
+function createPoster() {
+  if (!validate()) return;
+  var btn = document.getElementById('createBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>&nbsp; GENERATING...';
+
+  setTimeout(function() {
+    try {
+      var name     = document.getElementById('productName').value.trim().toUpperCase();
+      var price    = parseFloat(document.getElementById('price').value) || 0;
+      var currency = state.currency;
+
+      state.pdfBlob  = makePDF(name, price, currency);
+      state.docxBlob = makeDOCX(name, price, currency);
+
+      btn.innerHTML = '✓&nbsp; POSTER CREATED!';
+      btn.style.background = 'var(--success)';
+      var panel = document.getElementById('downloadPanel');
+      panel.classList.add('visible');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      setTimeout(function() {
+        btn.innerHTML = '🖨&nbsp; CREATE POSTER';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 2500);
+    } catch(e) {
+      showError('❌ Error: ' + e.message);
+      btn.innerHTML = '🖨&nbsp; CREATE POSTER';
+      btn.style.background = '';
+      btn.disabled = false;
+    }
+  }, 300);
 }
 
 function triggerDownload(blob, filename) {
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url; a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
 }
 
 function downloadPDF() {
   if (!state.pdfBlob) { showError('Please create a poster first.'); return; }
-  var name = document.getElementById('productName').value.trim().replace(/\s+/g,'_') || 'poster';
-  triggerDownload(state.pdfBlob, 'poster_' + name + '.pdf');
+  var n = document.getElementById('productName').value.trim().replace(/\s+/g,'_') || 'poster';
+  triggerDownload(state.pdfBlob, 'poster_' + n + '.pdf');
 }
 
 function downloadDOCX() {
   if (!state.docxBlob) { showError('Please create a poster first.'); return; }
-  var name = document.getElementById('productName').value.trim().replace(/\s+/g,'_') || 'poster';
-  // docxBlob is a Promise from JSZip
+  var n = document.getElementById('productName').value.trim().replace(/\s+/g,'_') || 'poster';
   Promise.resolve(state.docxBlob).then(function(blob) {
-    triggerDownload(blob, 'poster_' + name + '.docx');
+    triggerDownload(blob, 'poster_' + n + '.docx');
   });
 }
 
