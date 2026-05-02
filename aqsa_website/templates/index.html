@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AQSA Poster Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #E8001E;
+  --red2: #b5001a;
+  --yellow: #FFD600;
+  --dark: #111;
+  --bg: #F2F2F2;
+  --white: #fff;
+  --card: #fff;
+  --border: #ddd;
+  --text: #111;
+  --muted: #777;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--dark);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 56px;
+}
+.topbar-logo {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #fff;
+}
+.topbar-logo span { color: var(--yellow); }
+.topbar-right {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+}
+
+/* ── HERO BANNER ── */
+.hero {
+  background: var(--red);
+  padding: 44px 32px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: 'SALE';
+  position: absolute;
+  right: -30px; top: -20px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 160px;
+  color: rgba(255,255,255,0.06);
+  letter-spacing: -4px;
+  pointer-events: none;
+  user-select: none;
+}
+.hero h1 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(36px, 6vw, 68px);
+  color: #fff;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.hero h1 span {
+  color: var(--yellow);
+  display: block;
+}
+.hero p {
+  color: rgba(255,255,255,0.75);
+  font-size: 14px;
+  max-width: 500px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: calc(100vh - 56px - 130px);
+}
+@media(max-width:768px){ .layout { grid-template-columns: 1fr; } }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--dark);
+  padding: 32px 20px;
+}
+.sidebar-section { margin-bottom: 36px; }
+.sidebar-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #222;
+}
+
+/* Type buttons */
+.type-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.15s;
+  text-align: left;
+}
+.type-btn:hover { border-color: #444; background: #222; }
+.type-btn.active {
+  background: var(--red);
+  border-color: var(--red);
+}
+.type-btn.active .type-btn-icon { color: #fff; }
+.type-btn.active .type-btn-name { color: #fff; }
+.type-btn.active .type-btn-sub  { color: rgba(255,255,255,0.65); }
+.type-btn-icon { font-size: 22px; flex-shrink: 0; color: #666; }
+.type-btn-name {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ccc;
+  display: block;
+  line-height: 1.2;
+}
+.type-btn-sub { font-size: 11px; color: #555; display: block; margin-top: 2px; }
+
+/* Currency pills */
+.cur-row { display: flex; gap: 8px; }
+.cur-pill {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 8px 0;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #888;
+  transition: all 0.15s;
+}
+.cur-pill:hover { border-color: #444; color: #ccc; }
+.cur-pill.active { background: var(--yellow); border-color: var(--yellow); color: #111; }
+
+/* Mode toggle */
+.mode-toggle {
+  display: flex;
+  background: #1a1a1a;
+  border-radius: 6px;
+  padding: 3px;
+  gap: 3px;
+}
+.mode-pill {
+  flex: 1;
+  padding: 7px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #666;
+  transition: all 0.15s;
+}
+.mode-pill.active { background: var(--white); color: var(--dark); }
+
+/* ── MAIN PANEL ── */
+.panel {
+  padding: 32px;
+  background: var(--bg);
+}
+
+.panel-heading {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+.panel-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+/* ── ITEM CARDS ── */
+.item-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 12px;
+  position: relative;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  animation: slideIn 0.2s ease;
+}
+@keyframes slideIn {
+  from { opacity:0; transform: translateY(-8px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.item-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.item-badge {
+  background: var(--red);
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+.item-remove {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.item-remove:hover { border-color: var(--red); color: var(--red); background: #fff0f2; }
+
+.fields-row {
+  display: grid;
+  gap: 12px;
+}
+.fields-2 { grid-template-columns: 2fr 1fr; }
+.fields-3 { grid-template-columns: 2fr 1fr 1fr; }
+@media(max-width:560px){ .fields-2, .fields-3 { grid-template-columns: 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field input {
+  background: #f8f8f8;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 9px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field input:focus { border-color: var(--red); background: #fff; }
+.field input::placeholder { color: #bbb; }
+
+/* Add item btn */
+.add-btn {
+  width: 100%;
+  background: transparent;
+  border: 1.5px dashed #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #aaa;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 4px;
+}
+.add-btn:hover { border-color: var(--red); color: var(--red); background: #fff5f6; }
+
+/* ── UPLOAD ZONE ── */
+.upload-zone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 50px 32px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+  background: #fff;
+}
+.upload-zone:hover, .upload-zone.drag { border-color: var(--red); background: #fff5f6; }
+.upload-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-em { font-size: 42px; margin-bottom: 12px; }
+.upload-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.upload-hint { font-size: 12px; color: var(--muted); }
+.upload-chosen {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+}
+.col-note {
+  margin-top: 14px;
+  background: #fffbea;
+  border: 1px solid #f0d800;
+  border-radius: 5px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #7a6000;
+}
+.col-note strong { color: #333; }
+
+/* ── GENERATE SECTION ── */
+.gen-section {
+  margin-top: 28px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.gen-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.gen-icon {
+  width: 48px; height: 48px;
+  background: #fff0f2;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.gen-info-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.gen-info-sub { font-size: 12px; color: var(--muted); }
+
+/* THE BUTTON */
+.gen-btn {
+  width: 100%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 18px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.gen-btn:hover:not(:disabled) {
+  background: var(--red2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(232,0,30,0.35);
+}
+.gen-btn:active:not(:disabled) { transform: translateY(0); }
+.gen-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* Status */
+.status {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  align-items: center;
+  gap: 10px;
+}
+.status.show { display: flex; }
+.status.ok  { background: #f0faf0; border: 1px solid #b2dfb2; color: #2a7a2a; }
+.status.err { background: #fff0f2; border: 1px solid #ffb2be; color: #c00020; }
+.status.loading { background: #fffbea; border: 1px solid #ffe44d; color: #7a5f00; }
+
+.spin {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid currentColor; border-top-color: transparent;
+  animation: spin 0.7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* hidden */
+.hidden { display: none !important; }
+
+footer {
+  background: var(--dark);
+  color: #444;
+  text-align: center;
+  padding: 18px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">AQSA <span>Poster</span> Generator</div>
+  <div class="topbar-right">Word .docx Output</div>
+</div>
+
+<div class="hero">
+  <h1>Retail Price<span>Poster Studio</span></h1>
+  <p>Create A4 price posters, shelf labels, and dual-item cards. Fill in your products and download a print-ready Word document instantly.</p>
+</div>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Poster Type</div>
+      <button class="type-btn active" data-type="a4_single" onclick="setType(this)">
+        <span class="type-btn-icon">📄</span>
+        <span>
+          <span class="type-btn-name">A4 Single Item</span>
+          <span class="type-btn-sub">Portrait · 1 product/page</span>
+        </span>
+      </button>
+      <button class="type-btn" data-type="shelf" onclick="setType(this)">
+        <span class="type-btn-icon">🏪</span>
+        <span>
+          <span class="type-btn-name">Shelf Labels</span>
+          <span class="type-btn-sub">A5 Landscape · 6/page</span>
+        </span>
+      </button>
+      <button class="type-btn" data-type="two_items" onclick="setType(this)">
+        <span class="type-btn-icon">📋</span>
+        <span>
+          <span class="type-btn-name">2 Items</span>
+          <span class="type-btn-sub">A5 Landscape · 2/page</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Currency</div>
+      <div class="cur-row">
+        <div class="cur-pill active" data-cur="د.إ" onclick="setCur(this)">د.إ</div>
+        <div class="cur-pill" data-cur="AED" onclick="setCur(this)">AED</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Input Method</div>
+      <div class="mode-toggle">
+        <div class="mode-pill active" onclick="setMode('manual', this)">✏ Manual</div>
+        <div class="mode-pill" onclick="setMode('excel', this)">📊 Excel</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── MAIN PANEL ── -->
+  <div class="panel">
+
+    <div class="panel-heading" id="panel-heading">A4 Single Item Poster</div>
+    <div class="panel-sub" id="panel-sub">Enter product details below. Each item gets its own full A4 page.</div>
+
+    <!-- Manual -->
+    <div id="manual-wrap">
+      <div id="items-list"></div>
+      <button class="add-btn" id="add-btn" onclick="addItem()">+ Add Product</button>
+    </div>
+
+    <!-- Excel -->
+    <div id="excel-wrap" class="hidden">
+      <div class="upload-zone" id="drop-zone">
+        <input type="file" id="excel-file" accept=".xlsx" onchange="onFileChosen(this)"/>
+        <div class="upload-em">📁</div>
+        <div class="upload-title">Drop Excel File Here</div>
+        <div class="upload-hint">or click to browse — .xlsx only</div>
+        <div class="upload-chosen" id="chosen-name"></div>
+      </div>
+      <div class="col-note" id="col-note">
+        Required columns: <strong>Description</strong>, <strong>Price</strong>
+        <span id="unit-note" class="hidden"> + <strong>Unit</strong></span>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="gen-section">
+      <div class="gen-summary">
+        <div class="gen-icon" id="gen-icon">📄</div>
+        <div>
+          <div class="gen-info-title" id="gen-title">A4 Portrait – Single Item</div>
+          <div class="gen-info-sub" id="gen-sub">One product per page • Large red price • Product name</div>
+        </div>
+      </div>
+      <button class="gen-btn" id="gen-btn" onclick="doGenerate()">
+        <span id="btn-spinner" class="spin hidden"></span>
+        <span id="btn-label">⬇ Generate & Download</span>
+      </button>
+      <div class="status" id="status-bar">
+        <span id="status-icon"></span>
+        <span id="status-text"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>AQSA Poster Generator · Retail Pricing Tool · Word Document Output</footer>
+
+<script>
+// ── State ──────────────────────────────────────────────────────
+let posterType = 'a4_single';
+let currency   = 'د.إ';
+let mode       = 'manual';
+let items      = [];   // [{name, price, unit}]
+
+const META = {
+  a4_single:  { heading: 'A4 Single Item Poster',      sub: 'Each product gets a full A4 page with large price display.',          icon: '📄', title: 'A4 Portrait – Single Item',       info: 'One product per page • Large red price • Product name below' },
+  shelf:      { heading: 'Shelf Label Sheet',           sub: '6 labels printed per A5 landscape page in a table layout.',           icon: '🏪', title: 'A5 Landscape – Shelf Labels',     info: '6 labels per page • Table format • Britannic Bold font' },
+  two_items:  { heading: '2-Item Price Card',           sub: 'Two products per A5 landscape page with optional unit.',              icon: '📋', title: 'A5 Landscape – 2 Items per Page', info: 'Two products per page • With unit (kg/ltr) • Landscape' },
+};
+
+// ── Init ───────────────────────────────────────────────────────
+addItem();
+
+// ── Type ───────────────────────────────────────────────────────
+function setType(el) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  posterType = el.dataset.type;
+  const m = META[posterType];
+  document.getElementById('panel-heading').textContent = m.heading;
+  document.getElementById('panel-sub').textContent     = m.sub;
+  document.getElementById('gen-icon').textContent      = m.icon;
+  document.getElementById('gen-title').textContent     = m.title;
+  document.getElementById('gen-sub').textContent       = m.info;
+  document.getElementById('unit-note').classList.toggle('hidden', posterType !== 'two_items');
+  renderItems();
+}
+
+// ── Currency ───────────────────────────────────────────────────
+function setCur(el) {
+  document.querySelectorAll('.cur-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  currency = el.dataset.cur;
+}
+
+// ── Mode ───────────────────────────────────────────────────────
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('manual-wrap').classList.toggle('hidden', m !== 'manual');
+  document.getElementById('excel-wrap').classList.toggle('hidden', m !== 'excel');
+}
+
+// ── Items ──────────────────────────────────────────────────────
+function addItem() {
+  items.push({ name: '', price: '', unit: '' });
+  renderItems();
+}
+
+function removeItem(i) {
+  if (items.length <= 1) return;
+  items.splice(i, 1);
+  renderItems();
+}
+
+function renderItems() {
+  const list    = document.getElementById('items-list');
+  const showUnit = posterType === 'two_items';
+  list.innerHTML = '';
+
+  items.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'item-card';
+    d.innerHTML = `
+      <div class="item-card-top">
+        <span class="item-badge">Product ${i + 1}</span>
+        ${items.length > 1
+          ? `<button class="item-remove" title="Remove" onclick="removeItem(${i})">✕</button>`
+          : ''}
+      </div>
+      <div class="fields-row ${showUnit ? 'fields-3' : 'fields-2'}">
+        <div class="field">
+          <label>Product Name</label>
+          <input type="text" placeholder="e.g. BASMATI RICE 5KG"
+            value="${escHtml(item.name)}"
+            oninput="items[${i}].name = this.value"/>
+        </div>
+        <div class="field">
+          <label>Price</label>
+          <input type="number" placeholder="0.00" step="0.05" min="0"
+            value="${escHtml(item.price)}"
+            oninput="items[${i}].price = this.value"/>
+        </div>
+        ${showUnit ? `
+        <div class="field">
+          <label>Unit (opt.)</label>
+          <input type="text" placeholder="kg / ltr"
+            value="${escHtml(item.unit)}"
+            oninput="items[${i}].unit = this.value"/>
+        </div>` : ''}
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+// ── File upload ────────────────────────────────────────────────
+function onFileChosen(inp) {
+  document.getElementById('chosen-name').textContent =
+    inp.files[0] ? '✓ ' + inp.files[0].name : '';
+}
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', ()  => dz.classList.remove('drag'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) {
+    const dt = new DataTransfer(); dt.items.add(f);
+    document.getElementById('excel-file').files = dt.files;
+    onFileChosen({ files: [f] });
+  }
+});
+
+// ── GENERATE (the fixed version) ──────────────────────────────
+async function doGenerate() {
+  clearStatus();
+
+  // Validation
+  if (mode === 'manual') {
+    for (let i = 0; i < items.length; i++) {
+      if (!items[i].name.trim()) { showStatus('err', `Product ${i+1}: name is required.`); return; }
+      if (items[i].price === '' || isNaN(parseFloat(items[i].price))) {
+        showStatus('err', `Product ${i+1}: valid price is required.`); return;
+      }
+    }
+  } else {
+    if (!document.getElementById('excel-file').files[0]) {
+      showStatus('err', 'Please select an Excel file first.'); return;
+    }
+  }
+
+  setBusy(true);
+  showStatus('loading', 'Building your Word document…');
+
+  try {
+    const fd = new FormData();
+    fd.append('poster_type', posterType);
+    fd.append('currency',    currency);
+
+    if (mode === 'excel') {
+      fd.append('excel_file', document.getElementById('excel-file').files[0]);
+    } else {
+      items.forEach((item, i) => {
+        fd.append(`name_${i}`,  item.name.trim());
+        fd.append(`price_${i}`, String(parseFloat(item.price)));
+        fd.append(`unit_${i}`,  (item.unit || '').trim());
+      });
+    }
+
+    const res = await fetch('/generate', { method: 'POST', body: fd });
+
+    if (!res.ok) {
+      let msg = 'Server error';
+      try { msg = (await res.json()).error || msg; } catch(_) {}
+      throw new Error(msg);
+    }
+
+    // Download
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = { a4_single:'poster_a4.docx', shelf:'shelf_labels.docx', two_items:'poster_two.docx' }[posterType];
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showStatus('ok', '✓ Document downloaded successfully!');
+  } catch (err) {
+    showStatus('err', '✕ ' + err.message);
+  } finally {
+    setBusy(false);
+  }
+}
+
+function setBusy(busy) {
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = busy;
+  document.getElementById('btn-spinner').classList.toggle('hidden', !busy);
+  document.getElementById('btn-label').textContent = busy ? 'Generating…' : '⬇ Generate & Download';
+}
+
+function showStatus(type, msg) {
+  const bar = document.getElementById('status-bar');
+  bar.className = 'status show ' + type;
+  document.getElementById('status-text').textContent = msg;
+  document.getElementById('status-icon').innerHTML =
+    type === 'loading' ? '<div class="spin"></div>' :
+    type === 'ok'      ? '✓' : '✕';
+}
+
+function clearStatus() {
+  document.getElementById('status-bar').className = 'status';
+}
+</script>
+</body>
+</html>
