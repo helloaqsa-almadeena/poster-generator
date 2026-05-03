@@ -9,6 +9,8 @@ import pandas as pd
 app = Flask(__name__)
 
 # ── Constants ──────────────────────────────────────────────────────────────
+FONT_MAP = {1: 48, 2: 60, 3: 72, 4: 90, 5: 112}  # half-points per level
+
 SHELF_ROW_H  = 1872
 SHELF_COL0_W = 11779
 SHELF_COL1_W = 3075
@@ -56,11 +58,11 @@ def split_price(price):
     return integer, decimal
 
 # ── A4 Portrait ────────────────────────────────────────────────────────────
-def create_a4_portrait_single(items, currency="د.إ"):
+def create_a5_portrait_single(items, currency="د.إ", font_level=3):
     doc = Document()
     s = doc.sections[0]
-    s.page_width = Cm(21.0); s.page_height = Cm(29.7)
-    s.left_margin = s.right_margin = s.top_margin = s.bottom_margin = Cm(1.27)
+    s.page_width = Cm(14.8); s.page_height = Cm(21.0)
+    s.left_margin = s.right_margin = s.top_margin = s.bottom_margin = Cm(1.0)
 
     for idx, item in enumerate(items):
         name = item["name"].upper()
@@ -85,7 +87,8 @@ def create_a4_portrait_single(items, currency="د.إ"):
         # Product name
         p_name = doc.add_paragraph()
         set_para_center_no_space(p_name)
-        p_name._p.append(make_run(name, 'Impact', 72, bold=True, color_rgb=(0x00, 0x00, 0x00)))
+        name_sz = FONT_MAP.get(int(font_level), 72)
+        p_name._p.append(make_run(name, 'Impact', name_sz, bold=True, color_rgb=(0x00, 0x00, 0x00)))
 
         if idx < len(items) - 1:
             page_break(doc)
@@ -257,9 +260,10 @@ def generate():
         if not items:
             return jsonify({'error': 'No items provided'}), 400
 
+        font_level = int(request.form.get('font_level', 3))
         if poster_type == 'a4_single':
-            buf = create_a4_portrait_single(items, currency)
-            fname = 'poster_a4.docx'
+            buf = create_a5_portrait_single(items, currency, font_level)
+            fname = 'poster_a5.docx'
         elif poster_type == 'shelf':
             buf = create_a5_landscape_shelf(items, currency)
             fname = 'shelf_labels.docx'
@@ -280,4 +284,3 @@ def generate():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-    
