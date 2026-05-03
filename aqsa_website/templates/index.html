@@ -4,23 +4,27 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AQSA Poster Generator</title>
+<link rel="icon" type="image/x-icon" href="/static/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"/>
+<link rel="manifest" href="/static/manifest.json"/>
+<meta name="theme-color" content="#2563EB"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="AQSA Poster"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --blue:    #2563EB;
-  --blue2:   #1d4ed8;
-  --bg:      #F8F9FA;
-  --white:   #ffffff;
-  --border:  #E2E8F0;
-  --text:    #1A202C;
-  --muted:   #718096;
-  --light:   #EDF2F7;
-  --success: #38A169;
-  --error:   #E53E3E;
+  --blue:   #2563EB;
+  --blue2:  #1d4ed8;
+  --bg:     #F1F5F9;
+  --white:  #ffffff;
+  --border: #E2E8F0;
+  --text:   #1A202C;
+  --muted:  #718096;
+  --light:  #EDF2F7;
 }
-
 body {
   font-family: 'Inter', sans-serif;
   background: var(--bg);
@@ -28,46 +32,36 @@ body {
   min-height: 100vh;
 }
 
-/* ── NAVBAR ── */
+/* ── NAV ── */
 nav {
   background: var(--white);
   border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  height: 60px;
+  padding: 0 20px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
 }
-.nav-logo {
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--text);
-  letter-spacing: -0.3px;
-}
+.nav-logo { font-weight: 700; font-size: 17px; color: var(--text); }
 .nav-logo span { color: var(--blue); }
 .nav-tag {
-  font-size: 12px;
-  color: var(--muted);
-  background: var(--light);
-  padding: 4px 12px;
-  border-radius: 20px;
+  font-size: 11px; color: var(--muted);
+  background: var(--light); padding: 3px 10px; border-radius: 20px;
 }
 
-/* ── PAGE WRAPPER ── */
-.page {
-  max-width: 680px;
-  margin: 48px auto;
-  padding: 0 24px 80px;
+/* ── TWO-COLUMN LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
 }
-
-/* ── SECTION HEADING ── */
-.section-title {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
+@media(max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .preview-col { order: -1; } /* preview on top on mobile */
 }
 
 /* ── CARD ── */
@@ -75,248 +69,313 @@ nav {
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-
-/* ── PAGE TITLE ── */
-.page-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-}
-.page-desc {
-  font-size: 14px;
-  color: var(--muted);
-  margin-bottom: 36px;
-  line-height: 1.6;
+.card-title {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
 }
 
-/* ── CURRENCY ROW ── */
-.cur-row { display: flex; gap: 8px; margin-bottom: 0; }
+/* ── CURRENCY ── */
+.cur-row { display: flex; gap: 8px; }
 .cur-btn {
-  flex: 1;
-  padding: 9px 0;
-  text-align: center;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  background: var(--white);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
+  flex: 1; padding: 10px 0; text-align: center;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--white); font-size: 14px; font-weight: 600;
+  color: var(--muted); cursor: pointer; transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 .cur-btn:hover { border-color: var(--blue); color: var(--blue); }
-.cur-btn.active {
-  border-color: var(--blue);
-  background: #EFF6FF;
-  color: var(--blue);
+.cur-btn.active { border-color: var(--blue); background: #EFF6FF; color: var(--blue); }
+
+/* ── FONT SLIDER ── */
+.font-label-row {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 10px;
 }
+.font-size-val {
+  font-size: 12px; font-weight: 700; color: var(--blue);
+  background: #EFF6FF; padding: 2px 10px; border-radius: 20px;
+}
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px;
+  background: var(--border); border-radius: 5px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px;
+  border-radius: 50%; background: var(--blue); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(37,99,235,0.4);
+}
+input[type=range]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--blue); cursor: pointer; border: none;
+}
+.size-labels {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: var(--muted); margin-top: 5px;
+}
+.size-presets { display: flex; gap: 6px; margin-top: 10px; }
+.size-preset {
+  flex: 1; padding: 6px 0; text-align: center;
+  border: 1px solid var(--border); border-radius: 6px;
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.size-preset:hover { border-color: var(--blue); color: var(--blue); }
+.size-preset.active { border-color: var(--blue); background: #EFF6FF; color: var(--blue); font-weight: 700; }
 
 /* ── MODE TABS ── */
 .mode-tabs {
-  display: flex;
-  background: var(--light);
-  border-radius: 8px;
-  padding: 3px;
-  gap: 3px;
-  margin-bottom: 20px;
+  display: flex; background: var(--light);
+  border-radius: 8px; padding: 3px; gap: 3px; margin-bottom: 16px;
 }
 .mode-tab {
-  flex: 1;
-  padding: 8px 0;
-  text-align: center;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
+  flex: 1; padding: 9px 0; text-align: center;
+  border-radius: 6px; font-size: 13px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 .mode-tab.active {
-  background: var(--white);
-  color: var(--text);
-  font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  background: var(--white); color: var(--text);
+  font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 /* ── ITEM CARD ── */
 .item-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-  margin-bottom: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; margin-bottom: 10px;
   animation: fadeIn 0.2s ease;
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity:0; transform:translateY(-5px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 .item-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 12px;
 }
-.item-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--blue);
-  letter-spacing: 0.5px;
-}
+.item-label { font-size: 12px; font-weight: 600; color: var(--blue); }
 .item-del {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  width: 26px; height: 26px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  color: var(--muted);
-  font-size: 13px;
-  transition: all 0.15s;
+  cursor: pointer; color: var(--muted); font-size: 13px;
+  transition: all 0.15s; -webkit-tap-highlight-color: transparent;
 }
-.item-del:hover { border-color: var(--error); color: var(--error); }
-
-.fields { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
-@media(max-width:480px){ .fields { grid-template-columns: 1fr; } }
-
+.item-del:hover { border-color: #E53E3E; color: #E53E3E; }
+.fields { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+@media(max-width:400px){ .fields { grid-template-columns: 1fr; } }
 .field { display: flex; flex-direction: column; gap: 5px; }
-.field label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: 0.3px;
-}
+.field label { font-size: 11px; font-weight: 600; color: var(--muted); }
 .field input {
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 7px;
-  padding: 9px 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.15s, background 0.15s;
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 7px; padding: 10px 12px;
+  font-family: 'Inter', sans-serif; font-size: 15px;
+  color: var(--text); outline: none; transition: border-color 0.15s; width: 100%;
 }
-.field input:focus { border-color: var(--blue); background: var(--white); }
+.field input:focus { border-color: var(--blue); }
 .field input::placeholder { color: #C0C8D0; }
-
-/* ── ADD BUTTON ── */
 .add-btn {
-  width: 100%;
-  background: transparent;
-  border: 1.5px dashed var(--border);
-  border-radius: 10px;
-  padding: 11px;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  margin-top: 4px;
+  width: 100%; background: transparent;
+  border: 1.5px dashed var(--border); border-radius: 10px; padding: 12px;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--muted); cursor: pointer; transition: all 0.15s; margin-top: 4px;
+  -webkit-tap-highlight-color: transparent;
 }
 .add-btn:hover { border-color: var(--blue); color: var(--blue); background: #EFF6FF; }
 
-/* ── UPLOAD ZONE ── */
+/* ── UPLOAD ── */
 .upload-zone {
-  border: 2px dashed var(--border);
-  border-radius: 10px;
-  padding: 44px 24px;
-  text-align: center;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.15s;
-  background: var(--bg);
+  border: 2px dashed var(--border); border-radius: 10px;
+  padding: 36px 20px; text-align: center; cursor: pointer;
+  position: relative; transition: all 0.15s; background: var(--bg);
 }
-.upload-zone:hover, .upload-zone.drag {
-  border-color: var(--blue);
-  background: #EFF6FF;
-}
+.upload-zone:hover,.upload-zone.drag { border-color: var(--blue); background: #EFF6FF; }
 .upload-zone input[type=file] {
   position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
 }
-.upload-icon { font-size: 32px; margin-bottom: 10px; }
-.upload-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.upload-icon { font-size: 28px; margin-bottom: 8px; }
+.upload-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
 .upload-hint  { font-size: 12px; color: var(--muted); }
-.upload-chosen { margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--blue); }
-
+.upload-chosen { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--blue); }
 .col-note {
-  margin-top: 12px;
-  background: #FFFBEB;
-  border: 1px solid #FCD34D;
-  border-radius: 7px;
-  padding: 10px 14px;
-  font-size: 12px;
-  color: #92400E;
+  margin-top: 10px; background: #FFFBEB; border: 1px solid #FCD34D;
+  border-radius: 7px; padding: 9px 12px; font-size: 12px; color: #92400E;
 }
 
 /* ── GENERATE BUTTON ── */
 .gen-btn {
-  width: 100%;
+  width: 100%; background: var(--blue); color: #fff;
+  border: none; border-radius: 10px; padding: 16px;
+  font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+  transition: background 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.gen-btn:hover:not(:disabled) { background: var(--blue2); box-shadow: 0 6px 20px rgba(37,99,235,0.3); }
+.gen-btn:disabled { background: #A0AEC0; cursor: not-allowed; }
+.status {
+  display: none; margin-top: 12px; padding: 11px 14px;
+  border-radius: 8px; font-size: 13px; font-weight: 500;
+  align-items: center; gap: 8px;
+}
+.status.show    { display: flex; }
+.status.ok      { background: #F0FFF4; border: 1px solid #9AE6B4; color: #276749; }
+.status.err     { background: #FFF5F5; border: 1px solid #FEB2B2; color: #9B2C2C; }
+.status.loading { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+.spin {
+  width: 14px; height: 14px; border: 2px solid currentColor;
+  border-top-color: transparent; border-radius: 50%;
+  animation: spin 0.7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
+
+/* ══════════════════════════════════════════
+   LIVE PREVIEW PANEL
+══════════════════════════════════════════ */
+.preview-col { position: sticky; top: 76px; height: fit-content; }
+
+.preview-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.preview-header {
   background: var(--blue);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 15px;
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.preview-header-title {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+}
+.preview-badge {
+  font-size: 10px; font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  color: #fff; padding: 2px 8px; border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* The A4 paper simulation */
+.paper-wrap {
+  padding: 16px;
+  background: #E8ECF0;
+  display: flex;
+  justify-content: center;
+}
+.paper {
+  background: #fff;
+  width: 100%;
+  aspect-ratio: 148 / 210; /* A5 ratio */
+  border-radius: 3px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6% 8% 10%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Blank top space (the deal area) */
+.paper-spacer {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 42%;
+  border-bottom: 1.5px dashed #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-  letter-spacing: 0.3px;
 }
-.gen-btn:hover:not(:disabled) {
-  background: var(--blue2);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37,99,235,0.3);
+.spacer-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ccc;
 }
-.gen-btn:active:not(:disabled) { transform: translateY(0); }
-.gen-btn:disabled { background: #A0AEC0; cursor: not-allowed; }
 
-/* ── STATUS ── */
-.status {
-  display: none;
-  margin-top: 12px;
-  padding: 11px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  align-items: center;
-  gap: 8px;
+/* Price */
+.paper-price {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 6px;
+  line-height: 1;
 }
-.status.show  { display: flex; }
-.status.ok    { background: #F0FFF4; border: 1px solid #9AE6B4; color: #276749; }
-.status.err   { background: #FFF5F5; border: 1px solid #FEB2B2; color: #9B2C2C; }
-.status.loading { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
-
-.spin {
-  width: 14px; height: 14px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
+.price-integer {
+  font-weight: 900;
+  color: #EE0000;
+  font-family: Impact, 'Arial Black', sans-serif;
+  line-height: 1;
+  transition: font-size 0.2s ease;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+.price-decimal {
+  font-weight: 900;
+  color: #EE0000;
+  font-family: Impact, 'Arial Black', sans-serif;
+  margin-bottom: 4px;
+  transition: font-size 0.2s ease;
+}
+.price-currency {
+  color: #000;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  margin-bottom: 4px;
+  transition: font-size 0.2s ease;
+}
 
-.hidden { display: none !important; }
-
-/* ── FOOTER ── */
-footer {
+/* Product name */
+.paper-name {
+  font-family: Impact, 'Arial Black', sans-serif;
+  font-weight: 900;
+  color: #000;
   text-align: center;
-  padding: 24px;
-  font-size: 12px;
-  color: var(--muted);
+  text-transform: uppercase;
+  word-break: break-word;
+  line-height: 1.1;
+  transition: font-size 0.2s ease;
+  max-width: 100%;
+}
+
+/* Multi-page indicator */
+.preview-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.preview-pages {
+  font-size: 11px; color: var(--muted); font-weight: 500;
+}
+.preview-nav { display: flex; gap: 6px; }
+.prev-btn, .next-btn {
+  background: var(--light); border: 1px solid var(--border);
+  border-radius: 5px; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 12px; color: var(--muted);
+  transition: all 0.15s;
+}
+.prev-btn:hover, .next-btn:hover { border-color: var(--blue); color: var(--blue); }
+.prev-btn:disabled, .next-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+footer {
+  text-align: center; padding: 20px;
+  font-size: 11px; color: var(--muted);
   border-top: 1px solid var(--border);
 }
 </style>
@@ -325,86 +384,153 @@ footer {
 
 <nav>
   <div class="nav-logo">AQSA <span>Poster</span> Generator</div>
-  <div class="nav-tag">Word .docx Output</div>
+  <div class="nav-tag">A5 Preview</div>
 </nav>
 
-<div class="page">
+<div class="layout">
 
-  <h1 class="page-title">A4 Price Poster</h1>
-  <p class="page-desc">Fill in your product details, choose currency, and download a print-ready Word document instantly.</p>
+  <!-- ── LEFT: CONTROLS ── -->
+  <div class="form-col">
 
-  <!-- Currency -->
-  <div class="card">
-    <div class="section-title">Currency</div>
-    <div class="cur-row">
-      <div class="cur-btn active" data-cur="د.إ" onclick="setCur(this)">د.إ &nbsp;Dirham</div>
-      <div class="cur-btn" data-cur="AED" onclick="setCur(this)">AED</div>
-    </div>
-  </div>
-
-  <!-- Products -->
-  <div class="card">
-    <div class="section-title" style="margin-bottom:16px">Products</div>
-
-    <!-- Mode tabs -->
-    <div class="mode-tabs">
-      <div class="mode-tab active" onclick="setMode('manual', this)">✏️ Manual Entry</div>
-      <div class="mode-tab" onclick="setMode('excel', this)">📊 Excel Upload</div>
-    </div>
-
-    <!-- Manual -->
-    <div id="manual-wrap">
-      <div id="items-list"></div>
-      <button class="add-btn" onclick="addItem()">+ Add Another Product</button>
-    </div>
-
-    <!-- Excel -->
-    <div id="excel-wrap" class="hidden">
-      <div class="upload-zone" id="drop-zone">
-        <input type="file" id="excel-file" accept=".xlsx" onchange="onFileChosen(this)"/>
-        <div class="upload-icon">📄</div>
-        <div class="upload-title">Drop Excel file here</div>
-        <div class="upload-hint">or click to browse — .xlsx only</div>
-        <div class="upload-chosen" id="chosen-name"></div>
-      </div>
-      <div class="col-note">
-        Required columns: <strong>Description</strong> and <strong>Price</strong>
+    <!-- Currency -->
+    <div class="card">
+      <div class="card-title">Currency</div>
+      <div class="cur-row">
+        <div class="cur-btn active" data-cur="د.إ" onclick="setCur(this)">د.إ &nbsp;Dirham</div>
+        <div class="cur-btn" data-cur="AED" onclick="setCur(this)">AED</div>
       </div>
     </div>
+
+    <!-- Font Size -->
+    <div class="card">
+      <div class="font-label-row">
+        <div class="card-title" style="margin-bottom:0">Product Name Size</div>
+        <div class="font-size-val" id="size-display">Medium</div>
+      </div>
+      <input type="range" id="font-slider" min="1" max="5" value="3"
+        oninput="setPreset(parseInt(this.value))"/>
+      <div class="size-labels"><span>Smaller</span><span>Larger</span></div>
+      <div class="size-presets">
+        <div class="size-preset"  onclick="setPreset(1)">XS</div>
+        <div class="size-preset"  onclick="setPreset(2)">S</div>
+        <div class="size-preset active" onclick="setPreset(3)">M</div>
+        <div class="size-preset"  onclick="setPreset(4)">L</div>
+        <div class="size-preset"  onclick="setPreset(5)">XL</div>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Products</div>
+      <div class="mode-tabs">
+        <div class="mode-tab active" onclick="setMode('manual',this)">✏️ Manual Entry</div>
+        <div class="mode-tab" onclick="setMode('excel',this)">📊 Excel Upload</div>
+      </div>
+
+      <div id="manual-wrap">
+        <div id="items-list"></div>
+        <button class="add-btn" onclick="addItem()">+ Add Another Product</button>
+      </div>
+
+      <div id="excel-wrap" class="hidden">
+        <div class="upload-zone" id="drop-zone">
+          <input type="file" id="excel-file" accept=".xlsx" onchange="onFileChosen(this)"/>
+          <div class="upload-icon">📄</div>
+          <div class="upload-title">Tap to choose Excel file</div>
+          <div class="upload-hint">.xlsx files only</div>
+          <div class="upload-chosen" id="chosen-name"></div>
+        </div>
+        <div class="col-note">Required columns: <strong>Description</strong> and <strong>Price</strong></div>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="card">
+      <button class="gen-btn" id="gen-btn" onclick="doGenerate()">
+        <span id="btn-spinner" class="spin hidden"></span>
+        <span id="btn-label">⬇ Generate & Download</span>
+      </button>
+      <div class="status" id="status-bar">
+        <span id="status-icon"></span>
+        <span id="status-text"></span>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Generate -->
-  <div class="card">
-    <button class="gen-btn" id="gen-btn" onclick="doGenerate()">
-      <span id="btn-spinner" class="spin hidden"></span>
-      <span id="btn-label">⬇ Generate & Download .docx</span>
-    </button>
-    <div class="status" id="status-bar">
-      <span id="status-icon"></span>
-      <span id="status-text"></span>
+  <!-- ── RIGHT: LIVE PREVIEW ── -->
+  <div class="preview-col">
+    <div class="preview-card">
+      <div class="preview-header">
+        <span class="preview-header-title">A5 Live Preview</span>
+        <span class="preview-badge" id="preview-badge">Page 1 of 1</span>
+      </div>
+      <div class="paper-wrap">
+        <div class="paper" id="paper">
+          <div class="paper-spacer">
+            <span class="spacer-label">Deal / Offer Space</span>
+          </div>
+          <div class="paper-price" id="paper-price">
+            <span class="price-integer" id="prev-integer">0</span>
+            <span class="price-decimal" id="prev-decimal">.00</span>
+            <span class="price-currency" id="prev-currency">د.إ</span>
+          </div>
+          <div class="paper-name" id="prev-name">PRODUCT NAME</div>
+        </div>
+      </div>
+      <div class="preview-footer">
+        <span class="preview-pages" id="page-indicator">Page 1 of 1</span>
+        <div class="preview-nav">
+          <button class="prev-btn" id="prev-pg" onclick="changePage(-1)" disabled>‹</button>
+          <button class="next-btn" id="next-pg" onclick="changePage(1)"  disabled>›</button>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
-<footer>AQSA Poster Generator · A4 Price Poster · Word Document Output</footer>
+<footer>AQSA Poster Generator · A5 Price Poster · Word Document Output</footer>
 
 <script>
-let currency = 'د.إ';
-let mode     = 'manual';
-let items    = [];
+let currency   = 'د.إ';
+let mode       = 'manual';
+let items      = [];
+let fontLevel  = 3;
+let previewIdx = 0;
 
-// Init
+// Font size map (px for preview, half-points for Word)
+const FONT_PX  = { 1: 14, 2: 18, 3: 24, 4: 30, 5: 38 }; // preview px
+const FONT_DOC = { 1: 48, 2: 60, 3: 72, 4: 90, 5: 112 }; // Word half-pts
+const SIZE_LBL = { 1:'X-Small', 2:'Small', 3:'Medium', 4:'Large', 5:'X-Large' };
+
+// Price sizes scale with name but fixed ratios
+const PRICE_PX = { 1: 38, 2: 48, 3: 58, 4: 70, 5: 82 };
+const DEC_PX   = { 1: 16, 2: 18, 3: 22, 4: 26, 5: 30 };
+const CUR_PX   = { 1: 14, 2: 16, 3: 18, 4: 20, 5: 22 };
+
 addItem();
 
-// Currency
+// ── Currency ─────────────────────────────────────────────────
 function setCur(el) {
   document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   currency = el.dataset.cur;
+  updatePreview();
 }
 
-// Mode
+// ── Font Size ─────────────────────────────────────────────────
+function setPreset(val) {
+  fontLevel = val;
+  document.getElementById('font-slider').value = val;
+  document.getElementById('size-display').textContent = SIZE_LBL[val];
+  document.querySelectorAll('.size-preset').forEach((el, i) => {
+    el.classList.toggle('active', i + 1 === val);
+  });
+  updatePreview();
+}
+
+// ── Mode ──────────────────────────────────────────────────────
 function setMode(m, el) {
   mode = m;
   document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
@@ -413,18 +539,19 @@ function setMode(m, el) {
   document.getElementById('excel-wrap').classList.toggle('hidden', m !== 'excel');
 }
 
-// Items
+// ── Items ─────────────────────────────────────────────────────
 function addItem() {
   items.push({ name: '', price: '' });
   renderItems();
+  updatePreview();
 }
-
 function removeItem(i) {
   if (items.length <= 1) return;
   items.splice(i, 1);
+  if (previewIdx >= items.length) previewIdx = items.length - 1;
   renderItems();
+  updatePreview();
 }
-
 function renderItems() {
   const list = document.getElementById('items-list');
   list.innerHTML = '';
@@ -434,31 +561,71 @@ function renderItems() {
     d.innerHTML = `
       <div class="item-top">
         <span class="item-label">Product ${i + 1}</span>
-        ${items.length > 1 ? `<button class="item-del" onclick="removeItem(${i})">✕</button>` : ''}
+        ${items.length > 1
+          ? `<button class="item-del" onclick="removeItem(${i})">✕</button>` : ''}
       </div>
       <div class="fields">
         <div class="field">
           <label>Product Name</label>
           <input type="text" placeholder="e.g. Basmati Rice 5KG"
             value="${esc(item.name)}"
-            oninput="items[${i}].name = this.value"/>
+            oninput="items[${i}].name=this.value; updatePreview();"
+            autocomplete="off"/>
         </div>
         <div class="field">
           <label>Price</label>
           <input type="number" placeholder="0.00" step="0.05" min="0"
+            inputmode="decimal"
             value="${esc(item.price)}"
-            oninput="items[${i}].price = this.value"/>
+            oninput="items[${i}].price=this.value; updatePreview();"/>
         </div>
       </div>`;
     list.appendChild(d);
   });
 }
-
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 }
 
-// File upload
+// ── Page navigation ───────────────────────────────────────────
+function changePage(dir) {
+  previewIdx = Math.max(0, Math.min(items.length - 1, previewIdx + dir));
+  updatePreview();
+}
+
+// ── LIVE PREVIEW UPDATE ───────────────────────────────────────
+function updatePreview() {
+  const total = items.length;
+  const item  = items[previewIdx] || { name: '', price: '' };
+
+  // Price
+  const raw   = parseFloat(item.price) || 0;
+  const intPart = Math.floor(raw);
+  const decPart = (raw.toFixed(2)).split('.')[1] || '00';
+
+  // Font sizes
+  document.getElementById('prev-integer').style.fontSize  = PRICE_PX[fontLevel] + 'px';
+  document.getElementById('prev-decimal').style.fontSize  = DEC_PX[fontLevel]   + 'px';
+  document.getElementById('prev-currency').style.fontSize = CUR_PX[fontLevel]   + 'px';
+  document.getElementById('prev-name').style.fontSize     = FONT_PX[fontLevel]  + 'px';
+
+  // Content
+  document.getElementById('prev-integer').textContent  = intPart;
+  document.getElementById('prev-decimal').textContent  = '.' + decPart;
+  document.getElementById('prev-currency').textContent = ' ' + currency;
+  document.getElementById('prev-name').textContent     = item.name.trim().toUpperCase() || 'PRODUCT NAME';
+
+  // Page indicator
+  const label = `Page ${previewIdx + 1} of ${total}`;
+  document.getElementById('preview-badge').textContent  = label;
+  document.getElementById('page-indicator').textContent = label;
+
+  // Nav buttons
+  document.getElementById('prev-pg').disabled = previewIdx === 0;
+  document.getElementById('next-pg').disabled = previewIdx >= total - 1;
+}
+
+// ── File upload ───────────────────────────────────────────────
 function onFileChosen(inp) {
   document.getElementById('chosen-name').textContent =
     inp.files[0] ? '✓ ' + inp.files[0].name : '';
@@ -476,10 +643,9 @@ dz.addEventListener('drop', e => {
   }
 });
 
-// Generate
+// ── Generate ──────────────────────────────────────────────────
 async function doGenerate() {
   clearStatus();
-
   if (mode === 'manual') {
     for (let i = 0; i < items.length; i++) {
       if (!items[i].name.trim()) { showStatus('err', `Product ${i+1}: name is required.`); return; }
@@ -499,7 +665,8 @@ async function doGenerate() {
   try {
     const fd = new FormData();
     fd.append('poster_type', 'a4_single');
-    fd.append('currency', currency);
+    fd.append('currency',    currency);
+    fd.append('font_level',  fontLevel);
 
     if (mode === 'excel') {
       fd.append('excel_file', document.getElementById('excel-file').files[0]);
@@ -512,21 +679,19 @@ async function doGenerate() {
     }
 
     const res = await fetch('/generate', { method: 'POST', body: fd });
-
     if (!res.ok) {
       let msg = 'Server error';
-      try { msg = (await res.json()).error || msg; } catch(_){}
+      try { msg = (await res.json()).error || msg; } catch(_) {}
       throw new Error(msg);
     }
 
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
-    a.href = url; a.download = 'poster_a4.docx';
+    a.href = url; a.download = 'poster_a5.docx';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-
     showStatus('ok', '✓ Downloaded successfully!');
   } catch(err) {
     showStatus('err', '✕ ' + err.message);
@@ -535,21 +700,18 @@ async function doGenerate() {
   }
 }
 
-function setBusy(busy) {
-  document.getElementById('gen-btn').disabled = busy;
-  document.getElementById('btn-spinner').classList.toggle('hidden', !busy);
-  document.getElementById('btn-label').textContent = busy ? 'Generating…' : '⬇ Generate & Download .docx';
+function setBusy(b) {
+  document.getElementById('gen-btn').disabled = b;
+  document.getElementById('btn-spinner').classList.toggle('hidden', !b);
+  document.getElementById('btn-label').textContent = b ? 'Generating…' : '⬇ Generate & Download';
 }
-
 function showStatus(type, msg) {
   const bar = document.getElementById('status-bar');
   bar.className = 'status show ' + type;
   document.getElementById('status-text').textContent = msg;
   document.getElementById('status-icon').innerHTML =
-    type === 'loading' ? '<div class="spin"></div>' :
-    type === 'ok' ? '✓' : '✕';
+    type === 'loading' ? '<div class="spin"></div>' : type === 'ok' ? '✓' : '✕';
 }
-
 function clearStatus() {
   document.getElementById('status-bar').className = 'status';
 }
