@@ -397,7 +397,6 @@ footer {
       <div class="card-title">Currency</div>
       <div class="cur-row">
         <div class="cur-btn active" data-cur="د.إ" onclick="setCur(this)">د.إ &nbsp;Dirham</div>
-        <div class="cur-btn" data-cur="AED" onclick="setCur(this)">AED</div>
       </div>
     </div>
 
@@ -407,15 +406,13 @@ footer {
         <div class="card-title" style="margin-bottom:0">Product Name Size</div>
         <div class="font-size-val" id="size-display">Medium</div>
       </div>
-      <input type="range" id="font-slider" min="1" max="5" value="3"
+      <input type="range" id="font-slider" min="3" max="5" value="3"
         oninput="setPreset(parseInt(this.value))"/>
       <div class="size-labels"><span>Smaller</span><span>Larger</span></div>
       <div class="size-presets">
-        <div class="size-preset"  onclick="setPreset(1)">XS</div>
-        <div class="size-preset"  onclick="setPreset(2)">S</div>
-        <div class="size-preset active" onclick="setPreset(3)">M</div>
-        <div class="size-preset"  onclick="setPreset(4)">L</div>
-        <div class="size-preset"  onclick="setPreset(5)">XL</div>
+        <div class="size-preset active" onclick="setPreset(3)">Medium</div>
+        <div class="size-preset"  onclick="setPreset(4)">Large</div>
+        <div class="size-preset"  onclick="setPreset(5)">X-Large</div>
       </div>
     </div>
 
@@ -493,7 +490,7 @@ footer {
 <footer>AQSA Poster Generator · A5 Price Poster · Word Document Output</footer>
 
 <script>
-let currency   = 'د.إ';
+let currency   = 'د.إ'; // fixed
 let mode       = 'manual';
 let items      = [];
 let fontLevel  = 3;
@@ -502,12 +499,12 @@ let previewIdx = 0;
 // Font size map (px for preview, half-points for Word)
 const FONT_PX  = { 1: 14, 2: 18, 3: 24, 4: 30, 5: 38 }; // preview px
 const FONT_DOC = { 1: 48, 2: 60, 3: 72, 4: 90, 5: 112 }; // Word half-pts
-const SIZE_LBL = { 1:'X-Small', 2:'Small', 3:'Medium', 4:'Large', 5:'X-Large' };
+const SIZE_LBL = { 3:'Medium', 4:'Large', 5:'X-Large' };
 
 // Price sizes scale with name but fixed ratios
-const PRICE_PX = { 1: 38, 2: 48, 3: 58, 4: 70, 5: 82 };
-const DEC_PX   = { 1: 16, 2: 18, 3: 22, 4: 26, 5: 30 };
-const CUR_PX   = { 1: 14, 2: 16, 3: 18, 4: 20, 5: 22 };
+const PRICE_PX = { 1: 52, 2: 64, 3: 115, 4: 135, 5: 155 };
+const DEC_PX   = { 1: 22, 2: 26, 3: 50, 4: 60, 5: 70 };
+const CUR_PX   = { 1: 18, 2: 20, 3: 34, 4: 42, 5: 50 };
 
 addItem();
 
