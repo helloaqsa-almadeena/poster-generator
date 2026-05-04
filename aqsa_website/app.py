@@ -9,7 +9,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # ── Constants ──────────────────────────────────────────────────────────────
-FONT_MAP = {1: 48, 2: 60, 3: 72, 4: 90, 5: 112}  # half-points per level
+FONT_MAP = {1: 48, 2: 60, 3: 72, 4: 88, 5: 108}  # half-points, A5 sized
 
 SHELF_ROW_H  = 1872
 SHELF_COL0_W = 11779
@@ -73,16 +73,16 @@ def create_a5_portrait_single(items, currency="د.إ", font_level=3):
         pPr = spacer._p.get_or_add_pPr()
         sp = OxmlElement('w:spacing')
         sp.set(qn('w:before'), '0'); sp.set(qn('w:after'), '0')
-        sp.set(qn('w:line'), '6480'); sp.set(qn('w:lineRule'), 'exact')
+        sp.set(qn('w:line'), '3240'); sp.set(qn('w:lineRule'), 'exact')  # ~2.25cm for A5
         pPr.append(sp)
         jc = OxmlElement('w:jc'); jc.set(qn('w:val'), 'both'); pPr.append(jc)
 
         # Price line: integer + .decimal + د.إ
         p_price = doc.add_paragraph()
         set_para_center_no_space(p_price)
-        p_price._p.append(make_run(str(integer),  'Impact', 500, bold=True, color_rgb=(0xEE, 0x00, 0x00)))
-        p_price._p.append(make_run(f'.{decimal}', 'Impact', 130, bold=True, color_rgb=(0xEE, 0x00, 0x00)))
-        p_price._p.append(make_run(f' {currency}','aed',     96, bold=True, color_rgb=(0x00, 0x00, 0x00)))
+        p_price._p.append(make_run(str(integer),  'Impact', 284, bold=True, color_rgb=(0xEE, 0x00, 0x00)))
+        p_price._p.append(make_run(f'.{decimal}', 'Impact', 114, bold=True, color_rgb=(0xEE, 0x00, 0x00)))
+        p_price._p.append(make_run(f' {currency}','aed',     86, bold=True, color_rgb=(0x00, 0x00, 0x00)))
 
         # Product name
         p_name = doc.add_paragraph()
