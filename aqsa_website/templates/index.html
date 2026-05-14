@@ -60,8 +60,11 @@ nav {
   padding: 24px 20px 80px;
 }
 @media(max-width: 860px) {
-  .layout { grid-template-columns: 1fr; }
-  .preview-col { order: -1; } /* preview on top on mobile */
+  .layout { grid-template-columns: 1fr; padding: 16px 12px 60px; gap: 14px; }
+  .preview-col { order: 1; } /* preview BELOW form on mobile */
+  .preview-col .preview-card { max-width: 100%; }
+  .paper-wrap { padding: 10px; }
+  .paper { max-height: 280px; }
 }
 
 /* ── CARD ── */
@@ -240,6 +243,9 @@ input[type=range]::-moz-range-thumb {
    LIVE PREVIEW PANEL
 ══════════════════════════════════════════ */
 .preview-col { position: sticky; top: 76px; height: fit-content; }
+@media(max-width: 860px) {
+  .preview-col { position: static; }
+}
 
 .preview-card {
   background: var(--white);
