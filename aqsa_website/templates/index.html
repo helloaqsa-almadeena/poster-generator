@@ -59,8 +59,7 @@ nav {
   margin: 0 auto;
   padding: 24px 20px 80px;
 }
-@media(max-width: 860px) {
-  .layout { grid-template-columns: 1fr; padding: 16px 12px 60px; gap: 14px; }
+
   .preview-col { order: 1; } /* preview BELOW form on mobile */
   .preview-col .preview-card { max-width: 100%; }
   .paper-wrap { padding: 10px; }
@@ -83,16 +82,6 @@ nav {
 }
 
 /* ── CURRENCY ── */
-.cur-row { display: flex; gap: 8px; }
-.cur-btn {
-  flex: 1; padding: 10px 0; text-align: center;
-  border: 1.5px solid var(--border); border-radius: 8px;
-  background: var(--white); font-size: 14px; font-weight: 600;
-  color: var(--muted); cursor: pointer; transition: all 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.cur-btn:hover { border-color: var(--blue); color: var(--blue); }
-.cur-btn.active { border-color: var(--blue); background: #EFF6FF; color: var(--blue); }
 
 /* ── FONT SLIDER ── */
 .font-label-row {
@@ -243,8 +232,7 @@ input[type=range]::-moz-range-thumb {
    LIVE PREVIEW PANEL
 ══════════════════════════════════════════ */
 .preview-col { position: sticky; top: 76px; height: fit-content; }
-@media(max-width: 860px) {
-  .preview-col { position: static; }
+
 }
 
 .preview-card {
@@ -384,6 +372,24 @@ footer {
   font-size: 11px; color: var(--muted);
   border-top: 1px solid var(--border);
 }
+
+/* ── MOBILE ── */
+@media(max-width: 860px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px 60px;
+    gap: 0;
+  }
+  .form-col  { order: 1; } /* form FIRST */
+  .preview-col {
+    order: 2;              /* preview SECOND = below */
+    position: static;
+    margin-top: 0;
+  }
+  .paper { max-height: 260px; }
+  .paper-wrap { padding: 10px; }
+}
 </style>
 </head>
 <body>
@@ -398,12 +404,7 @@ footer {
   <!-- ── LEFT: CONTROLS ── -->
   <div class="form-col">
 
-    <!-- Currency -->
-    <div class="card">
-      <div class="card-title">Currency</div>
-      <div class="cur-row">
-        <div class="cur-btn active" data-cur="د.إ" onclick="setCur(this)">د.إ &nbsp;Dirham</div>
-      </div>
+    
     </div>
 
     <!-- Font Size -->
@@ -516,7 +517,6 @@ addItem();
 
 // ── Currency ─────────────────────────────────────────────────
 function setCur(el) {
-  document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   currency = el.dataset.cur;
   updatePreview();
