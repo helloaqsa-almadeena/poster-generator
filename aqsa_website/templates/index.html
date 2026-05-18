@@ -2,585 +2,688 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>AQSA Poster Generator</title>
 <link rel="icon" type="image/x-icon" href="/static/favicon.ico"/>
-<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png"/>
-<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"/>
 <link rel="manifest" href="/static/manifest.json"/>
-<meta name="theme-color" content="#2563EB"/>
+<meta name="theme-color" content="#1a1a2e"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="AQSA Poster"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet"/>
 <style>
+
+/* ═══════════════════════════════════════
+   RESET & TOKENS
+═══════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --blue:   #2563EB;
-  --blue2:  #1d4ed8;
-  --bg:     #F1F5F9;
-  --white:  #ffffff;
-  --border: #E2E8F0;
-  --text:   #1A202C;
-  --muted:  #718096;
-  --light:  #EDF2F7;
+  --bg:        #F6F7F9;
+  --surface:   #FFFFFF;
+  --border:    #E4E7EC;
+  --border2:   #CDD2DB;
+  --text:      #111827;
+  --text2:     #6B7280;
+  --text3:     #9CA3AF;
+  --accent:    #E8001E;
+  --accent2:   #B5001A;
+  --blue:      #2563EB;
+  --blue-soft: #EFF6FF;
+  --green:     #16A34A;
+  --yellow:    #CA8A04;
+  --radius:    10px;
+  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.10);
 }
+
+html { -webkit-text-size-adjust: 100%; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  line-height: 1.5;
 }
 
-/* ── NAV ── */
-nav {
-  background: var(--white);
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 0 20px;
   height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center;
+  padding: 0 20px;
+  gap: 12px;
 }
-.nav-logo { font-weight: 700; font-size: 17px; color: var(--text); }
-.nav-logo span { color: var(--blue); }
-.nav-tag {
-  font-size: 11px; color: var(--muted);
-  background: var(--light); padding: 3px 10px; border-radius: 20px;
+.nav-logo {
+  font-size: 16px; font-weight: 700;
+  color: var(--text); letter-spacing: -.3px;
+  display: flex; align-items: center; gap: 8px;
 }
-
-/* ── TWO-COLUMN LAYOUT ── */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 20px 80px;
+.nav-logo .dot {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #fff;
+  letter-spacing: 0; flex-shrink: 0;
 }
-
-  .preview-col { order: 1; } /* preview BELOW form on mobile */
-  .preview-col .preview-card { max-width: 100%; }
-  .paper-wrap { padding: 10px; }
-  .paper { max-height: 280px; }
-}
-
-/* ── CARD ── */
-.card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-.card-title {
+.nav-spacer { flex: 1; }
+.nav-pill {
   font-size: 11px; font-weight: 600;
-  letter-spacing: 0.8px; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 12px;
+  letter-spacing: .5px; text-transform: uppercase;
+  background: var(--bg); color: var(--text2);
+  border: 1px solid var(--border);
+  padding: 4px 10px; border-radius: 20px;
 }
 
-/* ── CURRENCY ── */
-
-/* ── FONT SLIDER ── */
-.font-label-row {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 10px;
+/* ═══════════════════════════════════════
+   PAGE WRAPPER
+═══════════════════════════════════════ */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 20px 80px;
 }
-.font-size-val {
-  font-size: 12px; font-weight: 700; color: var(--blue);
-  background: #EFF6FF; padding: 2px 10px; border-radius: 20px;
+
+/* ═══════════════════════════════════════
+   TWO-COL GRID
+═══════════════════════════════════════ */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ═══════════════════════════════════════
+   CARD
+═══════════════════════════════════════ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.card-head {
+  padding: 14px 18px 0;
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+.card-head-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text2);
+}
+.card-body { padding: 12px 18px 18px; }
+
+/* ═══════════════════════════════════════
+   FONT SIZE CONTROL
+═══════════════════════════════════════ */
+.size-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  background: var(--blue-soft);
+  color: var(--blue);
+  padding: 2px 9px; border-radius: 20px;
+  min-width: 64px; text-align: center;
+}
+.slider-track {
+  position: relative;
+  padding: 10px 0 4px;
 }
 input[type=range] {
-  -webkit-appearance: none; width: 100%; height: 5px;
-  background: var(--border); border-radius: 5px; outline: none; cursor: pointer;
+  -webkit-appearance: none;
+  width: 100%; height: 4px;
+  background: var(--border);
+  border-radius: 4px; outline: none; cursor: pointer;
 }
 input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 22px; height: 22px;
-  border-radius: 50%; background: var(--blue); cursor: pointer;
-  box-shadow: 0 1px 4px rgba(37,99,235,0.4);
+  -webkit-appearance: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--blue);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+  transition: box-shadow .15s;
+}
+input[type=range]::-webkit-slider-thumb:active {
+  box-shadow: 0 0 0 5px rgba(37,99,235,.2);
 }
 input[type=range]::-moz-range-thumb {
   width: 22px; height: 22px; border-radius: 50%;
-  background: var(--blue); cursor: pointer; border: none;
+  background: var(--blue); border: none; cursor: pointer;
 }
-.size-labels {
-  display: flex; justify-content: space-between;
-  font-size: 10px; color: var(--muted); margin-top: 5px;
+.size-steps {
+  display: flex; gap: 6px; margin-top: 10px;
 }
-.size-presets { display: flex; gap: 6px; margin-top: 10px; }
-.size-preset {
-  flex: 1; padding: 6px 0; text-align: center;
-  border: 1px solid var(--border); border-radius: 6px;
-  font-size: 12px; font-weight: 500; color: var(--muted);
-  cursor: pointer; transition: all 0.15s;
+.step-btn {
+  flex: 1; padding: 7px 0; text-align: center;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 12px; font-weight: 600; color: var(--text2);
+  cursor: pointer; transition: all .15s;
+  background: var(--surface);
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
-.size-preset:hover { border-color: var(--blue); color: var(--blue); }
-.size-preset.active { border-color: var(--blue); background: #EFF6FF; color: var(--blue); font-weight: 700; }
+.step-btn:hover  { border-color: var(--blue); color: var(--blue); }
+.step-btn.active { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
 
-/* ── MODE TABS ── */
-.mode-tabs {
-  display: flex; background: var(--light);
-  border-radius: 8px; padding: 3px; gap: 3px; margin-bottom: 16px;
+/* ═══════════════════════════════════════
+   MODE TABS
+═══════════════════════════════════════ */
+.tabs {
+  display: flex; gap: 0;
+  background: var(--bg); border-radius: 8px;
+  padding: 3px; margin-bottom: 16px;
 }
-.mode-tab {
+.tab {
   flex: 1; padding: 9px 0; text-align: center;
   border-radius: 6px; font-size: 13px; font-weight: 500;
-  color: var(--muted); cursor: pointer; transition: all 0.15s;
+  color: var(--text2); cursor: pointer;
+  transition: all .15s;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
-.mode-tab.active {
-  background: var(--white); color: var(--text);
-  font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+.tab.active {
+  background: var(--surface); color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
 }
 
-/* ── ITEM CARD ── */
-.item-card {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px; margin-bottom: 10px;
-  animation: fadeIn 0.2s ease;
+/* ═══════════════════════════════════════
+   ITEM CARDS
+═══════════════════════════════════════ */
+.item {
+  border: 1.5px solid var(--border);
+  border-radius: 9px; padding: 14px;
+  margin-bottom: 10px; background: var(--bg);
+  animation: slideDown .18s ease;
 }
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(-5px); }
+@keyframes slideDown {
+  from { opacity:0; transform:translateY(-6px); }
   to   { opacity:1; transform:translateY(0); }
 }
-.item-top {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 12px;
+.item-row {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 10px;
 }
-.item-label { font-size: 12px; font-weight: 600; color: var(--blue); }
+.item-num {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .5px; text-transform: uppercase;
+  color: var(--accent);
+}
 .item-del {
-  background: none; border: 1px solid var(--border);
-  border-radius: 6px; width: 28px; height: 28px;
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--muted); font-size: 13px;
-  transition: all 0.15s; -webkit-tap-highlight-color: transparent;
-}
-.item-del:hover { border-color: #E53E3E; color: #E53E3E; }
-.fields { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
-@media(max-width:400px){ .fields { grid-template-columns: 1fr; } }
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field label { font-size: 11px; font-weight: 600; color: var(--muted); }
-.field input {
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: 7px; padding: 10px 12px;
-  font-family: 'Inter', sans-serif; font-size: 15px;
-  color: var(--text); outline: none; transition: border-color 0.15s; width: 100%;
-}
-.field input:focus { border-color: var(--blue); }
-.field input::placeholder { color: #C0C8D0; }
-.add-btn {
-  width: 100%; background: transparent;
-  border: 1.5px dashed var(--border); border-radius: 10px; padding: 12px;
-  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
-  color: var(--muted); cursor: pointer; transition: all 0.15s; margin-top: 4px;
+  cursor: pointer; color: var(--text3); font-size: 12px;
+  transition: all .15s;
   -webkit-tap-highlight-color: transparent;
 }
-.add-btn:hover { border-color: var(--blue); color: var(--blue); background: #EFF6FF; }
+.item-del:hover { border-color: var(--accent); color: var(--accent); background: #fff5f5; }
 
-/* ── UPLOAD ── */
-.upload-zone {
-  border: 2px dashed var(--border); border-radius: 10px;
-  padding: 36px 20px; text-align: center; cursor: pointer;
-  position: relative; transition: all 0.15s; background: var(--bg);
+.fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
 }
-.upload-zone:hover,.upload-zone.drag { border-color: var(--blue); background: #EFF6FF; }
-.upload-zone input[type=file] {
-  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .8px; text-transform: uppercase;
+  color: var(--text3);
 }
-.upload-icon { font-size: 28px; margin-bottom: 8px; }
-.upload-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.upload-hint  { font-size: 12px; color: var(--muted); }
-.upload-chosen { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--blue); }
-.col-note {
-  margin-top: 10px; background: #FFFBEB; border: 1px solid #FCD34D;
-  border-radius: 7px; padding: 9px 12px; font-size: 12px; color: #92400E;
+.field input {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--text);
+  outline: none; width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+.field input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+.field input::placeholder { color: var(--text3); }
+
+.add-item {
+  width: 100%; padding: 11px;
+  border: 1.5px dashed var(--border2);
+  border-radius: 9px; background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  color: var(--text2); cursor: pointer;
+  transition: all .15s; margin-top: 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-item:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+
+/* ═══════════════════════════════════════
+   UPLOAD ZONE
+═══════════════════════════════════════ */
+.drop {
+  border: 2px dashed var(--border2);
+  border-radius: 10px; padding: 40px 20px;
+  text-align: center; cursor: pointer;
+  position: relative; transition: all .15s;
+  background: var(--bg);
+}
+.drop:hover, .drop.over { border-color: var(--blue); background: var(--blue-soft); }
+.drop input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.drop-icon { font-size: 30px; margin-bottom: 8px; }
+.drop-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.drop-sub   { font-size: 12px; color: var(--text2); }
+.drop-name  { margin-top: 10px; font-size: 12px; font-weight: 600; color: var(--blue); }
+.tip {
+  margin-top: 10px; padding: 9px 12px;
+  background: #FEFCE8; border: 1px solid #FDE68A;
+  border-radius: 7px; font-size: 12px; color: #92400E;
+  line-height: 1.4;
 }
 
-/* ── GENERATE BUTTON ── */
-.gen-btn {
-  width: 100%; background: var(--blue); color: #fff;
-  border: none; border-radius: 10px; padding: 16px;
-  font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700;
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: center; gap: 8px;
-  transition: background 0.15s, box-shadow 0.15s;
-  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+/* ═══════════════════════════════════════
+   GENERATE BUTTON
+═══════════════════════════════════════ */
+.gen {
+  width: 100%; padding: 15px 20px;
+  background: var(--accent); color: #fff; border: none;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center; gap: 8px;
+  transition: background .15s, transform .1s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  letter-spacing: .3px;
 }
-.gen-btn:hover:not(:disabled) { background: var(--blue2); box-shadow: 0 6px 20px rgba(37,99,235,0.3); }
-.gen-btn:disabled { background: #A0AEC0; cursor: not-allowed; }
+.gen:hover:not(:disabled) {
+  background: var(--accent2);
+  box-shadow: 0 6px 20px rgba(232,0,30,.3);
+  transform: translateY(-1px);
+}
+.gen:active:not(:disabled) { transform: translateY(0); }
+.gen:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; }
+
+/* status */
 .status {
-  display: none; margin-top: 12px; padding: 11px 14px;
-  border-radius: 8px; font-size: 13px; font-weight: 500;
+  display: none; margin-top: 10px;
+  padding: 10px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
   align-items: center; gap: 8px;
 }
-.status.show    { display: flex; }
-.status.ok      { background: #F0FFF4; border: 1px solid #9AE6B4; color: #276749; }
-.status.err     { background: #FFF5F5; border: 1px solid #FEB2B2; color: #9B2C2C; }
-.status.loading { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
-.spin {
-  width: 14px; height: 14px; border: 2px solid currentColor;
-  border-top-color: transparent; border-radius: 50%;
-  animation: spin 0.7s linear infinite; flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.hidden { display: none !important; }
+.status.on { display: flex; }
+.status.ok  { background:#F0FFF4; border:1px solid #A7F3D0; color:#065F46; }
+.status.err { background:#FFF5F5; border:1px solid #FECACA; color:#991B1B; }
+.status.wait{ background:var(--blue-soft); border:1px solid #BFDBFE; color:#1E40AF; }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    LIVE PREVIEW PANEL
-══════════════════════════════════════════ */
-.preview-col { position: sticky; top: 76px; height: fit-content; }
-
-}
+═══════════════════════════════════════ */
+.preview-col { position: sticky; top: 70px; }
 
 .preview-card {
-  background: var(--white);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
-.preview-header {
-  background: var(--blue);
+.preview-bar {
+  background: var(--text);
   padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.preview-header-title {
-  font-size: 12px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: rgba(255,255,255,0.9);
+.preview-bar-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.7);
 }
-.preview-badge {
-  font-size: 10px; font-weight: 600;
-  background: rgba(255,255,255,0.2);
-  color: #fff; padding: 2px 8px; border-radius: 20px;
-  letter-spacing: 0.5px;
+.preview-bar-badge {
+  font-size: 11px; font-weight: 600;
+  background: rgba(255,255,255,.12); color: #fff;
+  padding: 2px 9px; border-radius: 20px;
 }
 
-/* The A4 paper simulation */
+/* A5 paper */
 .paper-wrap {
-  padding: 16px;
-  background: #E8ECF0;
-  display: flex;
-  justify-content: center;
+  background: #DDE1E7;
+  padding: 14px;
+  display: flex; justify-content: center;
 }
 .paper {
   background: #fff;
   width: 100%;
-  aspect-ratio: 148 / 210; /* A5 ratio */
+  aspect-ratio: 148 / 210;
   border-radius: 3px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 6% 8% 10%;
-  position: relative;
-  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding: 5% 7% 8%;
+  position: relative; overflow: hidden;
 }
-
-/* Blank top space (the deal area) */
-.paper-spacer {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 42%;
-  border-bottom: 1.5px dashed #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.paper-deal {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 40%;
+  border-bottom: 1.5px dashed #E0E0E0;
+  display: flex; align-items: center; justify-content: center;
 }
-.spacer-label {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #ccc;
+.paper-deal-label {
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #CCCCCC;
 }
-
-/* Price */
 .paper-price {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 2px;
-  margin-bottom: 6px;
-  line-height: 1;
+  display: flex; align-items: flex-end;
+  justify-content: center; gap: 1px;
+  margin-bottom: 5px; line-height: 1;
 }
-.price-integer {
-  font-weight: 900;
-  color: #EE0000;
+.p-int {
+  font-weight: 900; color: #EE0000;
   font-family: Impact, 'Arial Black', sans-serif;
-  line-height: 1;
-  transition: font-size 0.2s ease;
+  line-height: 1; transition: font-size .2s ease;
 }
-.price-decimal {
-  font-weight: 900;
-  color: #EE0000;
+.p-dec {
+  font-weight: 900; color: #EE0000;
   font-family: Impact, 'Arial Black', sans-serif;
-  margin-bottom: 4px;
-  transition: font-size 0.2s ease;
+  margin-bottom: 3px; transition: font-size .2s ease;
 }
-.price-currency {
-  color: #000;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  margin-bottom: 4px;
-  transition: font-size 0.2s ease;
+.p-cur {
+  color: #111; font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  margin-bottom: 3px; transition: font-size .2s ease;
 }
-
-/* Product name */
 .paper-name {
   font-family: Impact, 'Arial Black', sans-serif;
-  font-weight: 900;
-  color: #000;
-  text-align: center;
-  text-transform: uppercase;
-  word-break: break-word;
-  line-height: 1.1;
-  transition: font-size 0.2s ease;
-  max-width: 100%;
+  font-weight: 900; color: #000;
+  text-align: center; text-transform: uppercase;
+  word-break: break-word; line-height: 1.1;
+  transition: font-size .2s ease; max-width: 100%;
 }
 
-/* Multi-page indicator */
-.preview-footer {
+/* preview footer */
+.preview-foot {
   padding: 10px 16px;
   border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.preview-pages {
-  font-size: 11px; color: var(--muted); font-weight: 500;
-}
-.preview-nav { display: flex; gap: 6px; }
-.prev-btn, .next-btn {
-  background: var(--light); border: 1px solid var(--border);
-  border-radius: 5px; width: 26px; height: 26px;
+.preview-pg { font-size: 11px; color: var(--text2); font-weight: 500; }
+.pg-nav { display: flex; gap: 5px; }
+.pg-btn {
+  width: 28px; height: 28px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--bg);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 12px; color: var(--muted);
-  transition: all 0.15s;
+  cursor: pointer; font-size: 13px; color: var(--text2);
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
 }
-.prev-btn:hover, .next-btn:hover { border-color: var(--blue); color: var(--blue); }
-.prev-btn:disabled, .next-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.pg-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+.pg-btn:disabled { opacity: .35; cursor: not-allowed; }
 
+/* ═══════════════════════════════════════
+   SPINNER
+═══════════════════════════════════════ */
+.spin {
+  width: 15px; height: 15px;
+  border: 2px solid currentColor; border-top-color: transparent;
+  border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
 footer {
-  text-align: center; padding: 20px;
-  font-size: 11px; color: var(--muted);
+  text-align: center; padding: 24px 20px;
+  font-size: 11px; color: var(--text3);
+  letter-spacing: .5px;
   border-top: 1px solid var(--border);
 }
 
-/* ── MOBILE ── */
-@media(max-width: 860px) {
-  .layout {
-    display: flex;
-    flex-direction: column;
-    padding: 16px 12px 60px;
-    gap: 0;
+/* ═══════════════════════════════════════
+   RESPONSIVE — TABLET
+═══════════════════════════════════════ */
+@media(max-width: 900px) {
+  .grid { grid-template-columns: 1fr 300px; gap: 16px; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — MOBILE
+═══════════════════════════════════════ */
+@media(max-width: 680px) {
+  .page { padding: 16px 14px 60px; }
+  .grid {
+    display: flex; flex-direction: column; gap: 0;
   }
-  .form-col  { order: 1; } /* form FIRST */
+  /* form first, preview last */
+  .form-col  { order: 1; }
   .preview-col {
-    order: 2;              /* preview SECOND = below */
+    order: 2;
     position: static;
-    margin-top: 0;
+    margin-top: 14px;
   }
-  .paper { max-height: 260px; }
+  /* compact paper on mobile */
   .paper-wrap { padding: 10px; }
+  .paper { max-height: 240px; }
+  .paper-deal-label { font-size: 7px; }
+  /* inputs bigger tap target */
+  .field input { padding: 11px 12px; font-size: 16px; }
+  .card-body { padding: 10px 14px 14px; }
+  .card-head { padding: 12px 14px 0; }
+  /* fields single col on very small */
+  @media(max-width: 360px) {
+    .fields { grid-template-columns: 1fr; }
+  }
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo">AQSA <span>Poster</span> Generator</div>
-  <div class="nav-tag">A5 Preview</div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="dot">A</div>
+    AQSA Poster Generator
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="nav-pill">A5 · د.إ</div>
 </nav>
 
-<div class="layout">
+<!-- PAGE -->
+<div class="page">
+<div class="grid">
 
-  <!-- ── LEFT: CONTROLS ── -->
+  <!-- ══ LEFT: FORM ══ -->
   <div class="form-col">
-
-    
-    </div>
 
     <!-- Font Size -->
     <div class="card">
-      <div class="font-label-row">
-        <div class="card-title" style="margin-bottom:0">Product Name Size</div>
-        <div class="font-size-val" id="size-display">Medium</div>
+      <div class="card-head">
+        <span class="card-head-title">Product Name Size</span>
+        <span class="size-badge" id="size-label">Medium</span>
       </div>
-      <input type="range" id="font-slider" min="3" max="5" value="3"
-        oninput="setPreset(parseInt(this.value))"/>
-      <div class="size-labels"><span>Smaller</span><span>Larger</span></div>
-      <div class="size-presets">
-        <div class="size-preset active" onclick="setPreset(3)">Medium</div>
-        <div class="size-preset"  onclick="setPreset(4)">Large</div>
-        <div class="size-preset"  onclick="setPreset(5)">X-Large</div>
+      <div class="card-body">
+        <div class="slider-track">
+          <input type="range" id="slider" min="3" max="5" value="3"
+            oninput="setSize(parseInt(this.value))"/>
+        </div>
+        <div class="size-steps">
+          <button class="step-btn active" onclick="setSize(3)">Medium</button>
+          <button class="step-btn"        onclick="setSize(4)">Large</button>
+          <button class="step-btn"        onclick="setSize(5)">X-Large</button>
+        </div>
       </div>
     </div>
 
     <!-- Products -->
     <div class="card">
-      <div class="card-title" style="margin-bottom:14px">Products</div>
-      <div class="mode-tabs">
-        <div class="mode-tab active" onclick="setMode('manual',this)">✏️ Manual Entry</div>
-        <div class="mode-tab" onclick="setMode('excel',this)">📊 Excel Upload</div>
+      <div class="card-head">
+        <span class="card-head-title">Products</span>
       </div>
-
-      <div id="manual-wrap">
-        <div id="items-list"></div>
-        <button class="add-btn" onclick="addItem()">+ Add Another Product</button>
-      </div>
-
-      <div id="excel-wrap" class="hidden">
-        <div class="upload-zone" id="drop-zone">
-          <input type="file" id="excel-file" accept=".xlsx" onchange="onFileChosen(this)"/>
-          <div class="upload-icon">📄</div>
-          <div class="upload-title">Tap to choose Excel file</div>
-          <div class="upload-hint">.xlsx files only</div>
-          <div class="upload-chosen" id="chosen-name"></div>
+      <div class="card-body">
+        <div class="tabs">
+          <div class="tab active" onclick="setMode('manual',this)">✏️ &nbsp;Manual</div>
+          <div class="tab"        onclick="setMode('excel',this)">📊 &nbsp;Excel Upload</div>
         </div>
-        <div class="col-note">Required columns: <strong>Description</strong> and <strong>Price</strong></div>
+
+        <!-- Manual -->
+        <div id="manual-wrap">
+          <div id="items-list"></div>
+          <button class="add-item" onclick="addItem()">+ Add Another Product</button>
+        </div>
+
+        <!-- Excel -->
+        <div id="excel-wrap" class="hidden">
+          <div class="drop" id="dropzone">
+            <input type="file" id="xfile" accept=".xlsx" onchange="onFile(this)"/>
+            <div class="drop-icon">📄</div>
+            <div class="drop-title">Tap or drop Excel file</div>
+            <div class="drop-sub">.xlsx only</div>
+            <div class="drop-name" id="fname"></div>
+          </div>
+          <div class="tip">Required columns: <strong>Description</strong> &amp; <strong>Price</strong></div>
+        </div>
       </div>
     </div>
 
     <!-- Generate -->
     <div class="card">
-      <button class="gen-btn" id="gen-btn" onclick="doGenerate()">
-        <span id="btn-spinner" class="spin hidden"></span>
-        <span id="btn-label">⬇ Generate & Download</span>
-      </button>
-      <div class="status" id="status-bar">
-        <span id="status-icon"></span>
-        <span id="status-text"></span>
+      <div class="card-body" style="padding-top:18px">
+        <button class="gen" id="gen-btn" onclick="doGenerate()">
+          <span id="gen-spin" class="spin hidden"></span>
+          <span id="gen-lbl">⬇ &nbsp;Generate &amp; Download</span>
+        </button>
+        <div class="status" id="status">
+          <span id="s-icon"></span>
+          <span id="s-text"></span>
+        </div>
       </div>
     </div>
 
-  </div>
+  </div><!-- /form-col -->
 
-  <!-- ── RIGHT: LIVE PREVIEW ── -->
+  <!-- ══ RIGHT: PREVIEW ══ -->
   <div class="preview-col">
     <div class="preview-card">
-      <div class="preview-header">
-        <span class="preview-header-title">A5 Live Preview</span>
-        <span class="preview-badge" id="preview-badge">Page 1 of 1</span>
+      <div class="preview-bar">
+        <span class="preview-bar-title">Live Preview</span>
+        <span class="preview-bar-badge" id="pg-badge">Page 1 of 1</span>
       </div>
       <div class="paper-wrap">
-        <div class="paper" id="paper">
-          <div class="paper-spacer">
-            <span class="spacer-label">Deal / Offer Space</span>
+        <div class="paper">
+          <div class="paper-deal">
+            <span class="paper-deal-label">Deal / Offer Space</span>
           </div>
-          <div class="paper-price" id="paper-price">
-            <span class="price-integer" id="prev-integer">0</span>
-            <span class="price-decimal" id="prev-decimal">.00</span>
-            <span class="price-currency" id="prev-currency">د.إ</span>
+          <div class="paper-price">
+            <span class="p-int" id="p-int">0</span>
+            <span class="p-dec" id="p-dec">.00</span>
+            <span class="p-cur" id="p-cur">&nbsp;د.إ</span>
           </div>
-          <div class="paper-name" id="prev-name">PRODUCT NAME</div>
+          <div class="paper-name" id="p-name">PRODUCT NAME</div>
         </div>
       </div>
-      <div class="preview-footer">
-        <span class="preview-pages" id="page-indicator">Page 1 of 1</span>
-        <div class="preview-nav">
-          <button class="prev-btn" id="prev-pg" onclick="changePage(-1)" disabled>‹</button>
-          <button class="next-btn" id="next-pg" onclick="changePage(1)"  disabled>›</button>
+      <div class="preview-foot">
+        <span class="preview-pg" id="pg-label">Page 1 of 1</span>
+        <div class="pg-nav">
+          <button class="pg-btn" id="pg-prev" onclick="goPg(-1)" disabled>‹</button>
+          <button class="pg-btn" id="pg-next" onclick="goPg(1)"  disabled>›</button>
         </div>
       </div>
     </div>
-  </div>
+  </div><!-- /preview-col -->
 
-</div>
+</div><!-- /grid -->
+</div><!-- /page -->
 
-<footer>AQSA Poster Generator · A5 Price Poster · Word Document Output</footer>
+<footer>AQSA Poster Generator &nbsp;·&nbsp; A5 Portrait &nbsp;·&nbsp; د.إ</footer>
 
 <script>
-let currency   = 'د.إ'; // fixed
-let mode       = 'manual';
-let items      = [];
-let fontLevel  = 3;
-let previewIdx = 0;
+/* ── State ── */
+const currency = 'د.إ';
+let mode    = 'manual';
+let items   = [];
+let sz      = 3;   // 3=Medium 4=Large 5=XLarge
+let pgIdx   = 0;
 
-// Font size map (px for preview, half-points for Word)
-const FONT_PX  = { 1: 14, 2: 18, 3: 24, 4: 30, 5: 38 }; // preview px
-const FONT_DOC = { 1: 48, 2: 60, 3: 72, 4: 90, 5: 112 }; // Word half-pts
-const SIZE_LBL = { 3:'Medium', 4:'Large', 5:'X-Large' };
+/* Preview font sizes (px) */
+const INT_PX  = { 3:90,  4:110, 5:130 };
+const DEC_PX  = { 3:38,  4:48,  5:58  };
+const CUR_PX  = { 3:22,  4:28,  5:34  };
+const NAME_PX = { 3:20,  4:25,  5:31  };
 
-// Price sizes scale with name but fixed ratios
-const PRICE_PX = { 1: 52, 2: 64, 3: 115, 4: 135, 5: 155 };
-const DEC_PX   = { 1: 22, 2: 26, 3: 50, 4: 60, 5: 70 };
-const CUR_PX   = { 1: 18, 2: 20, 3: 34, 4: 42, 5: 50 };
-
+/* ── Init ── */
 addItem();
 
-// ── Currency ─────────────────────────────────────────────────
-function setCur(el) {
-  el.classList.add('active');
-  currency = el.dataset.cur;
-  updatePreview();
-}
-
-// ── Font Size ─────────────────────────────────────────────────
-function setPreset(val) {
-  fontLevel = val;
-  document.getElementById('font-slider').value = val;
-  document.getElementById('size-display').textContent = SIZE_LBL[val];
-  document.querySelectorAll('.size-preset').forEach((el, i) => {
-    el.classList.toggle('active', i + 1 === val);
+/* ── Font size ── */
+function setSize(v) {
+  sz = v;
+  document.getElementById('slider').value = v;
+  const lbl = { 3:'Medium', 4:'Large', 5:'X-Large' };
+  document.getElementById('size-label').textContent = lbl[v];
+  document.querySelectorAll('.step-btn').forEach((b,i) => {
+    b.classList.toggle('active', i + 3 === v);
   });
   updatePreview();
 }
 
-// ── Mode ──────────────────────────────────────────────────────
+/* ── Mode ── */
 function setMode(m, el) {
   mode = m;
-  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('manual-wrap').classList.toggle('hidden', m !== 'manual');
   document.getElementById('excel-wrap').classList.toggle('hidden', m !== 'excel');
 }
 
-// ── Items ─────────────────────────────────────────────────────
+/* ── Items ── */
 function addItem() {
-  items.push({ name: '', price: '' });
-  renderItems();
-  updatePreview();
+  items.push({ name:'', price:'' });
+  renderItems(); updatePreview();
 }
-function removeItem(i) {
+function delItem(i) {
   if (items.length <= 1) return;
   items.splice(i, 1);
-  if (previewIdx >= items.length) previewIdx = items.length - 1;
-  renderItems();
-  updatePreview();
+  if (pgIdx >= items.length) pgIdx = items.length - 1;
+  renderItems(); updatePreview();
 }
 function renderItems() {
   const list = document.getElementById('items-list');
   list.innerHTML = '';
-  items.forEach((item, i) => {
+  items.forEach((it, i) => {
     const d = document.createElement('div');
-    d.className = 'item-card';
+    d.className = 'item';
     d.innerHTML = `
-      <div class="item-top">
-        <span class="item-label">Product ${i + 1}</span>
+      <div class="item-row">
+        <span class="item-num">Product ${i+1}</span>
         ${items.length > 1
-          ? `<button class="item-del" onclick="removeItem(${i})">✕</button>` : ''}
+          ? `<button class="item-del" onclick="delItem(${i})">✕</button>` : ''}
       </div>
       <div class="fields">
         <div class="field">
-          <label>Product Name</label>
+          <label>Name</label>
           <input type="text" placeholder="e.g. Basmati Rice 5KG"
-            value="${esc(item.name)}"
-            oninput="items[${i}].name=this.value; updatePreview();"
-            autocomplete="off"/>
+            value="${esc(it.name)}"
+            oninput="items[${i}].name=this.value;updatePreview()"
+            autocomplete="off" autocorrect="off" spellcheck="false"/>
         </div>
         <div class="field">
           <label>Price</label>
-          <input type="number" placeholder="0.00" step="0.05" min="0"
-            inputmode="decimal"
-            value="${esc(item.price)}"
-            oninput="items[${i}].price=this.value; updatePreview();"/>
+          <input type="number" placeholder="0.00"
+            step="0.05" min="0" inputmode="decimal"
+            value="${esc(it.price)}"
+            oninput="items[${i}].price=this.value;updatePreview()"/>
         </div>
       </div>`;
     list.appendChild(d);
@@ -590,101 +693,94 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 }
 
-// ── Page navigation ───────────────────────────────────────────
-function changePage(dir) {
-  previewIdx = Math.max(0, Math.min(items.length - 1, previewIdx + dir));
+/* ── Preview ── */
+function updatePreview() {
+  const it  = items[pgIdx] || { name:'', price:'' };
+  const raw = parseFloat(it.price) || 0;
+  const int = Math.floor(raw);
+  const dec = raw.toFixed(2).split('.')[1] || '00';
+
+  document.getElementById('p-int').textContent  = int;
+  document.getElementById('p-dec').textContent  = '.' + dec;
+  document.getElementById('p-name').textContent = it.name.trim().toUpperCase() || 'PRODUCT NAME';
+
+  document.getElementById('p-int').style.fontSize  = INT_PX[sz]  + 'px';
+  document.getElementById('p-dec').style.fontSize  = DEC_PX[sz]  + 'px';
+  document.getElementById('p-cur').style.fontSize  = CUR_PX[sz]  + 'px';
+  document.getElementById('p-name').style.fontSize = NAME_PX[sz] + 'px';
+
+  const total = items.length;
+  const lbl   = `Page ${pgIdx+1} of ${total}`;
+  document.getElementById('pg-badge').textContent = lbl;
+  document.getElementById('pg-label').textContent = lbl;
+  document.getElementById('pg-prev').disabled = pgIdx === 0;
+  document.getElementById('pg-next').disabled = pgIdx >= total - 1;
+}
+function goPg(dir) {
+  pgIdx = Math.max(0, Math.min(items.length-1, pgIdx+dir));
   updatePreview();
 }
 
-// ── LIVE PREVIEW UPDATE ───────────────────────────────────────
-function updatePreview() {
-  const total = items.length;
-  const item  = items[previewIdx] || { name: '', price: '' };
-
-  // Price
-  const raw   = parseFloat(item.price) || 0;
-  const intPart = Math.floor(raw);
-  const decPart = (raw.toFixed(2)).split('.')[1] || '00';
-
-  // Font sizes
-  document.getElementById('prev-integer').style.fontSize  = PRICE_PX[fontLevel] + 'px';
-  document.getElementById('prev-decimal').style.fontSize  = DEC_PX[fontLevel]   + 'px';
-  document.getElementById('prev-currency').style.fontSize = CUR_PX[fontLevel]   + 'px';
-  document.getElementById('prev-name').style.fontSize     = FONT_PX[fontLevel]  + 'px';
-
-  // Content
-  document.getElementById('prev-integer').textContent  = intPart;
-  document.getElementById('prev-decimal').textContent  = '.' + decPart;
-  document.getElementById('prev-currency').textContent = ' ' + currency;
-  document.getElementById('prev-name').textContent     = item.name.trim().toUpperCase() || 'PRODUCT NAME';
-
-  // Page indicator
-  const label = `Page ${previewIdx + 1} of ${total}`;
-  document.getElementById('preview-badge').textContent  = label;
-  document.getElementById('page-indicator').textContent = label;
-
-  // Nav buttons
-  document.getElementById('prev-pg').disabled = previewIdx === 0;
-  document.getElementById('next-pg').disabled = previewIdx >= total - 1;
-}
-
-// ── File upload ───────────────────────────────────────────────
-function onFileChosen(inp) {
-  document.getElementById('chosen-name').textContent =
+/* ── File upload ── */
+function onFile(inp) {
+  document.getElementById('fname').textContent =
     inp.files[0] ? '✓ ' + inp.files[0].name : '';
 }
-const dz = document.getElementById('drop-zone');
-dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag'); });
-dz.addEventListener('dragleave', ()  => dz.classList.remove('drag'));
+const dz = document.getElementById('dropzone');
+dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', ()  => dz.classList.remove('over'));
 dz.addEventListener('drop', e => {
-  e.preventDefault(); dz.classList.remove('drag');
+  e.preventDefault(); dz.classList.remove('over');
   const f = e.dataTransfer.files[0];
   if (f) {
     const dt = new DataTransfer(); dt.items.add(f);
-    document.getElementById('excel-file').files = dt.files;
-    onFileChosen({ files: [f] });
+    document.getElementById('xfile').files = dt.files;
+    onFile({ files: [f] });
   }
 });
 
-// ── Generate ──────────────────────────────────────────────────
+/* ── Generate ── */
 async function doGenerate() {
   clearStatus();
+
   if (mode === 'manual') {
     for (let i = 0; i < items.length; i++) {
-      if (!items[i].name.trim()) { showStatus('err', `Product ${i+1}: name is required.`); return; }
+      if (!items[i].name.trim()) {
+        showStatus('err', `Product ${i+1}: name is required.`); return;
+      }
       if (items[i].price === '' || isNaN(parseFloat(items[i].price))) {
-        showStatus('err', `Product ${i+1}: please enter a valid price.`); return;
+        showStatus('err', `Product ${i+1}: enter a valid price.`); return;
       }
     }
   } else {
-    if (!document.getElementById('excel-file').files[0]) {
-      showStatus('err', 'Please select an Excel file first.'); return;
+    if (!document.getElementById('xfile').files[0]) {
+      showStatus('err', 'Please select an Excel file.'); return;
     }
   }
 
-  setBusy(true);
-  showStatus('loading', 'Building your Word document…');
+  busy(true);
+  showStatus('wait', 'Building your document…');
 
   try {
     const fd = new FormData();
     fd.append('poster_type', 'a4_single');
     fd.append('currency',    currency);
-    fd.append('font_level',  fontLevel);
+    fd.append('font_level',  sz);
 
     if (mode === 'excel') {
-      fd.append('excel_file', document.getElementById('excel-file').files[0]);
+      fd.append('excel_file', document.getElementById('xfile').files[0]);
     } else {
-      items.forEach((item, i) => {
-        fd.append(`name_${i}`,  item.name.trim());
-        fd.append(`price_${i}`, String(parseFloat(item.price)));
+      items.forEach((it, i) => {
+        fd.append(`name_${i}`,  it.name.trim());
+        fd.append(`price_${i}`, String(parseFloat(it.price)));
         fd.append(`unit_${i}`,  '');
       });
     }
 
-    const res = await fetch('/generate', { method: 'POST', body: fd });
+    const res = await fetch('/generate', { method:'POST', body:fd });
     if (!res.ok) {
       let msg = 'Server error';
-      try { msg = (await res.json()).error || msg; } catch(_) {}
+      try { msg = (await res.json()).error || msg; } catch(_){}
       throw new Error(msg);
     }
 
@@ -696,27 +792,27 @@ async function doGenerate() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showStatus('ok', '✓ Downloaded successfully!');
-  } catch(err) {
-    showStatus('err', '✕ ' + err.message);
+  } catch(e) {
+    showStatus('err', '✕ ' + e.message);
   } finally {
-    setBusy(false);
+    busy(false);
   }
 }
 
-function setBusy(b) {
+function busy(b) {
   document.getElementById('gen-btn').disabled = b;
-  document.getElementById('btn-spinner').classList.toggle('hidden', !b);
-  document.getElementById('btn-label').textContent = b ? 'Generating…' : '⬇ Generate & Download';
+  document.getElementById('gen-spin').classList.toggle('hidden', !b);
+  document.getElementById('gen-lbl').textContent = b ? 'Generating…' : '⬇ \u00a0Generate & Download';
 }
 function showStatus(type, msg) {
-  const bar = document.getElementById('status-bar');
-  bar.className = 'status show ' + type;
-  document.getElementById('status-text').textContent = msg;
-  document.getElementById('status-icon').innerHTML =
-    type === 'loading' ? '<div class="spin"></div>' : type === 'ok' ? '✓' : '✕';
+  const el = document.getElementById('status');
+  el.className = 'status on ' + type;
+  document.getElementById('s-icon').innerHTML =
+    type === 'wait' ? '<div class="spin"></div>' : type === 'ok' ? '✓' : '✕';
+  document.getElementById('s-text').textContent = msg;
 }
 function clearStatus() {
-  document.getElementById('status-bar').className = 'status';
+  document.getElementById('status').className = 'status';
 }
 </script>
 </body>
